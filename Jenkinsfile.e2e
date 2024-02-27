@@ -48,6 +48,9 @@ pipeline {
                 sh 'sleep 1m'
                 sh "curl http://${CONTAINER_IP}:9966/petclinic/api/pettypes"
 
+                sh 'sleep 3m'
+                sh "curl http://frontend:8080/petclinic"
+
                 dir('acceptance-e2e'){
                     git branch: 'master',
                     url: 'https://github.com/devops-mitocode/acceptance-e2e.git'
