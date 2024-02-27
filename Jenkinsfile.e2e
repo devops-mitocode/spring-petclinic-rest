@@ -30,38 +30,47 @@ pipeline {
                 }
             }
         }        
-        // stage('Integration Test') {
-        //     agent {
-        //         docker {
-        //             image 'maven:3.9.6-eclipse-temurin-8-alpine'
-        //             args "--network ${BUILD_TAG}_default -e CONTAINER_IP=${CONTAINER_IP}"
-        //         }
-        //     }
-        //     options {
-        //         skipDefaultCheckout()
-        //     }
-        //     steps {
-        //         sh 'sleep 1m'
-        //         sh "curl http://${CONTAINER_IP}:9966/petclinic/api/pettypes"
+        stage('E2E Test') {
+            agent {
+                docker {
+                    image 'maven:3.9.6-eclipse-temurin-8-alpine'
+                    args "--network ${BUILD_TAG}_default -e CONTAINER_IP=${CONTAINER_IP}"
+                }
+            }
+            options {
+                skipDefaultCheckout()
+            }
+            steps {
+                sh 'sleep 1m'
+                sh "curl http://${CONTAINER_IP}:9966/petclinic/api/pettypes"
 
-        //         dir('acceptance-it'){
-        //             git branch: 'master',
-        //             url: 'https://github.com/devops-mitocode/acceptance-it.git'
-        //         }
-        //         sh 'mvn clean verify -Dstyle.color=always -f acceptance-it/pom.xml -B -ntp'
+                dir('frontend'){
+                    git branch: "master",
+                    url: "https://github.com/devops-mitocode/spring-petclinic-angular.git"
+                }                
 
-        //         publishHTML(
-        //             target: [
-        //                 reportName : 'Serenity Report',
-        //                 reportDir:   'acceptance-it/target/site/serenity',
-        //                 reportFiles: 'index.html',
-        //                 keepAll:     true,
-        //                 alwaysLinkToLastBuild: true,
-        //                 allowMissing: false
-        //             ]
-        //         )
-        //     }
-        // }
+                dir('acceptance-e2e'){
+                    git branch: 'master',
+                    url: 'https://github.com/devops-mitocode/acceptance-e2e.git'
+                }
+
+                sh 'ls -la'
+                sh 'sleep 1m'
+
+                // sh 'mvn clean verify -Dstyle.color=always -f acceptance-e2e/pom.xml -B -ntp'
+
+                // publishHTML(
+                //     target: [
+                //         reportName : 'Serenity Report',
+                //         reportDir:   'acceptance-it/target/site/serenity',
+                //         reportFiles: 'index.html',
+                //         keepAll:     true,
+                //         alwaysLinkToLastBuild: true,
+                //         allowMissing: false
+                //     ]
+                // )
+            }
+        }
         stage('Destroy environment') {
             agent any
             options {
