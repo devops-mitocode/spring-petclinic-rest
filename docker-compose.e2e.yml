@@ -16,10 +16,10 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/petclinic
 
-  frontend:
-    build: ./frontend
-    environment:
-      - REST_API_URL=http://backend:9966/petclinic/api/
+  # frontend:
+  #   build: ./frontend
+  #   environment:
+  #     - REST_API_URL=http://backend:9966/petclinic/api/
 
   chrome:
     image: selenium/node-chrome:4.18.1-20240224
