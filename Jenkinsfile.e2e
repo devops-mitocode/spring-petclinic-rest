@@ -22,6 +22,10 @@ pipeline {
         stage('Prepare environment') {
             agent any
             steps {
+                dir('frontend'){
+                    git branch: "master",
+                    url: "https://github.com/devops-mitocode/spring-petclinic-angular.git"
+                }
                 sh "docker compose -f docker-compose.e2e.yml --project-name ${BUILD_TAG} up -d"
                 sh 'docker ps -a'
                 script {
@@ -43,11 +47,6 @@ pipeline {
             steps {
                 sh 'sleep 1m'
                 sh "curl http://${CONTAINER_IP}:9966/petclinic/api/pettypes"
-
-                dir('frontend'){
-                    git branch: "master",
-                    url: "https://github.com/devops-mitocode/spring-petclinic-angular.git"
-                }                
 
                 dir('acceptance-e2e'){
                     git branch: 'master',
