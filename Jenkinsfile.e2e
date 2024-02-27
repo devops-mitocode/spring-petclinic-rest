@@ -15,11 +15,7 @@ pipeline {
                     image 'maven:3.9.6-eclipse-temurin-17-alpine'
                 }
             }
-            options {
-                skipDefaultCheckout()
-            }
             steps {
-                sh 'ls -la'
                 sh 'mvn clean package -Dstyle.color=always -DskipTests -B -ntp'
             }
         }
