@@ -2,44 +2,16 @@ version: "3.8"
 
 services:
   backend:
-    # container_name: petclinic-rest
     build: .
-    # ports:
-    #   - "9966:9966"
     depends_on:
       - db
     restart: always
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/petclinic
-    # networks:
-    #   - petclinic
 
   db:
-    # container_name: petclinic-db
     image: postgres:9.6.0
-    # ports:
-    #   - "5432:5432"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=petclinic
       - POSTGRES_DB=petclinic
-    # networks:
-    #   - petclinic
-
-  # petclinic-it:
-  #   container_name: petclinic-it
-  #   image: maven:3.6.3-jdk-8 
-  #   volumes:
-  #     - ./acceptance-it:/acceptance-it
-  #   depends_on:
-  #     - backend
-  #   command: tail -f /dev/null
-  #   networks:
-  #     - petclinic
-
-# networks:
-#   petclinic:
-#     driver: bridge
-#     ipam:
-#       config:
-#         - subnet: 172.20.0.0/16
