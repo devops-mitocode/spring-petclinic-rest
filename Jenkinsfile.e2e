@@ -19,6 +19,7 @@ pipeline {
                 skipDefaultCheckout()
             }
             steps {
+                sh 'ls -la'
                 sh 'mvn clean package -Dstyle.color=always -DskipTests -B -ntp'
             }
         }
