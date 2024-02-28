@@ -52,16 +52,7 @@ pipeline {
                 }
                 sh 'mvn clean verify -Dstyle.color=always -f acceptance-it/pom.xml -B -ntp'
 
-                publishHTML(
-                    target: [
-                        reportName : 'Serenity Report',
-                        reportDir:   'acceptance-it/target/site/serenity',
-                        reportFiles: 'index.html',
-                        keepAll:     true,
-                        alwaysLinkToLastBuild: true,
-                        allowMissing: false
-                    ]
-                )
+                cucumber '**/cucumber.json'
             }
         }
         stage('Destroy environment') {
