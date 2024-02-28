@@ -16,7 +16,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'mvn clean package -Dstyle.color=always -DskipTests -B -ntp'
+                sh 'mvn -q clean package -Dstyle.color=always -DskipTests -B -ntp'
             }
         }
         stage('Prepare environment') {
