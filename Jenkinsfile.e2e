@@ -61,16 +61,7 @@ pipeline {
 
                 sh 'mvn clean verify -Dstyle.color=always -f acceptance-e2e/pom.xml -B -ntp'
 
-                publishHTML(
-                    target: [
-                        reportName : 'Serenity Report',
-                        reportDir:   'acceptance-e2e/target/site/serenity',
-                        reportFiles: 'index.html',
-                        keepAll:     true,
-                        alwaysLinkToLastBuild: true,
-                        allowMissing: false
-                    ]
-                )
+                cucumber '**/cucumber.json'
             }
         }
         stage('Destroy environment') {
