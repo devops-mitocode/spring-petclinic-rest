@@ -3,20 +3,17 @@ pipeline {
     options {
         timeout(time: 10, unit: 'MINUTES')
         ansiColor('xterm')
-        // buildDiscarder(logRotator(numToKeepStr: '7'))
+        buildDiscarder(logRotator(numToKeepStr: '7'))
     }
-    // triggers {
-    //     cron('H/5 * * * *')
-    // }
+    triggers {
+        cron('H/5 * * * *')
+    }
     stages {
         stage('Build') {
             agent {
                 docker {
                     image 'maven:3.9.6-eclipse-temurin-17-alpine'
                 }
-            }
-            options {
-                skipDefaultCheckout()
             }
             steps {
                 sh 'mvn clean package -Dstyle.color=always -DskipTests -B -ntp'
@@ -25,6 +22,7 @@ pipeline {
         stage('Prepare environment') {
             agent any
             steps {
+                sh 'env | sort'
                 sh "docker compose --project-name ${BUILD_TAG} up -d"
                 sh 'docker ps -a'
                 script {
