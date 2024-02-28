@@ -25,7 +25,7 @@ pipeline {
                 sh 'env | sort'
                 sh "docker compose --project-name ${BUILD_TAG} up -d"
                 sh 'docker ps -a'
-                sh 'docket network ls'
+                sh 'docker network ls'
                 script {
                     CONTAINER_IP = sh(script: "docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${BUILD_TAG}-backend-1", returnStdout: true).trim()
                     print "CONTAINER_IP: ${CONTAINER_IP}"
