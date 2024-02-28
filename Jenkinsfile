@@ -5,9 +5,9 @@ pipeline {
         ansiColor('xterm')
         buildDiscarder(logRotator(numToKeepStr: '7'))
     }
-    triggers {
-        cron('H/5 * * * *')
-    }
+    // triggers {
+    //     cron('H/5 * * * *')
+    // }
     stages {
         stage('Build') {
             agent {
