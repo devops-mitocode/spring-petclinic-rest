@@ -5,9 +5,9 @@ pipeline {
         ansiColor('xterm')
         // buildDiscarder(logRotator(numToKeepStr: '7'))
     }
-    // triggers {
-    //     cron('H/5 * * * *')
-    // }
+    triggers {
+        cron('H/10 * * * *')
+    }
     stages {
         stage('Build') {
             agent {
@@ -28,17 +28,17 @@ pipeline {
                 }
                 sh "docker compose -f docker-compose.e2e.yml --project-name ${BUILD_TAG} up -d"
                 sh 'docker ps -a'
-                script {
-                    CONTAINER_IP = sh(script: "docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${BUILD_TAG}-backend-1", returnStdout: true).trim()
-                    print "CONTAINER_IP: ${CONTAINER_IP}"
-                }
+                // script {
+                //     CONTAINER_IP = sh(script: "docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${BUILD_TAG}-backend-1", returnStdout: true).trim()
+                //     print "CONTAINER_IP: ${CONTAINER_IP}"
+                // }
             }
         }        
         stage('E2E Test') {
             agent {
                 docker {
                     image 'maven:3.9.6-eclipse-temurin-11-alpine'
-                    args "--network ${BUILD_TAG}_default -e CONTAINER_IP=${CONTAINER_IP} -e EPHEMERAL=true"
+                    args "--network ${BUILD_TAG}_default -e EPHEMERAL=true"
                 }
             }
             options {
