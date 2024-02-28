@@ -49,7 +49,7 @@ pipeline {
                 sh "curl http://${CONTAINER_IP}:9966/petclinic/api/pettypes"
 
                 sh 'sleep 3m'
-                sh "curl http://frontend:8080/petclinic"
+                sh "curl http://frontend:8080"
 
                 dir('acceptance-e2e'){
                     git branch: 'master',
