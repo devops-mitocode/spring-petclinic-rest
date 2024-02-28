@@ -59,18 +59,18 @@ pipeline {
                 sh 'ls -la'
                 sh 'sleep 1m'
 
-                // sh 'mvn clean verify -Dstyle.color=always -f acceptance-e2e/pom.xml -B -ntp'
+                sh 'mvn clean verify -Dstyle.color=always -f acceptance-e2e/pom.xml -B -ntp'
 
-                // publishHTML(
-                //     target: [
-                //         reportName : 'Serenity Report',
-                //         reportDir:   'acceptance-it/target/site/serenity',
-                //         reportFiles: 'index.html',
-                //         keepAll:     true,
-                //         alwaysLinkToLastBuild: true,
-                //         allowMissing: false
-                //     ]
-                // )
+                publishHTML(
+                    target: [
+                        reportName : 'Serenity Report',
+                        reportDir:   'acceptance-it/target/site/serenity',
+                        reportFiles: 'index.html',
+                        keepAll:     true,
+                        alwaysLinkToLastBuild: true,
+                        allowMissing: false
+                    ]
+                )
             }
         }
         stage('Destroy environment') {
