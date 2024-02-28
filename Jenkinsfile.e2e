@@ -37,7 +37,7 @@ pipeline {
         stage('E2E Test') {
             agent {
                 docker {
-                    image 'maven:3.9.6-eclipse-temurin-8-alpine'
+                    image 'maven:3.9.6-eclipse-temurin-11-alpine'
                     args "--network ${BUILD_TAG}_default -e CONTAINER_IP=${CONTAINER_IP} -e EPHEMERAL=true"
                 }
             }
