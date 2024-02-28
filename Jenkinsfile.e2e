@@ -26,6 +26,7 @@ pipeline {
                     git branch: "master",
                     url: "https://github.com/devops-mitocode/spring-petclinic-angular.git"
                 }
+                sh "docker compose -f docker-compose.e2e.yml --project-name ${BUILD_TAG} build --no-cache"
                 sh "docker compose -f docker-compose.e2e.yml --project-name ${BUILD_TAG} up -d"
                 sh 'docker ps -a'
                 // script {
