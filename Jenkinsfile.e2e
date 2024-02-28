@@ -38,7 +38,7 @@ pipeline {
             agent {
                 docker {
                     image 'maven:3.9.6-eclipse-temurin-8-alpine'
-                    args "--network ${BUILD_TAG}_default -e CONTAINER_IP=${CONTAINER_IP}"
+                    args "--network ${BUILD_TAG}_default -e CONTAINER_IP=${CONTAINER_IP} -e EPHEMERAL=true"
                 }
             }
             options {
@@ -46,7 +46,7 @@ pipeline {
             }
             steps {
                 sh 'sleep 1m'
-                sh "curl http://${CONTAINER_IP}:9966/petclinic/api/pettypes"
+                sh "curl http://backend:9966/petclinic/api/pettypes"
 
                 sh 'sleep 3m'
                 sh "curl -I http://frontend:8080"
@@ -64,7 +64,7 @@ pipeline {
                 publishHTML(
                     target: [
                         reportName : 'Serenity Report',
-                        reportDir:   'acceptance-it/target/site/serenity',
+                        reportDir:   'acceptance-e2e/target/site/serenity',
                         reportFiles: 'index.html',
                         keepAll:     true,
                         alwaysLinkToLastBuild: true,
