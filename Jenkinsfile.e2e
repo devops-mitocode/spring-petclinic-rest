@@ -5,15 +5,15 @@ pipeline {
         ansiColor('xterm')
         // buildDiscarder(logRotator(numToKeepStr: '7'))
     }
-    triggers {
-        cron('H/10 * * * *')
-    }
+    // triggers {
+    //     cron('H/10 * * * *')
+    // }
     stages {
         stage('Build') {
             agent {
                 docker {
                     image 'maven:3.9.6-eclipse-temurin-17-alpine'
-                    args '--quiet'
+                    // args '--quiet'
                 }
             }
             steps {
