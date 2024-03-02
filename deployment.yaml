@@ -19,6 +19,6 @@ spec:
             limits:
               cpu: "1"
               memory: "1Gi"
-          image: danycenas/spring-petclinic-rest:3.2.5
+          image: danycenas/spring-petclinic-rest:latest
           ports:
             - containerPort: 9966
