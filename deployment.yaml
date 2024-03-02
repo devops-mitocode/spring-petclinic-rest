@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-petclinic-rest
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: spring-petclinic-rest
+  template:
+    metadata:
+      labels:
+        app: spring-petclinic-rest
+    spec:
+      containers:
+        - name: spring-petclinic-rest
+          image: danycenas/spring-petclinic-rest:3.0.14
+          ports:
+            - containerPort: 9966
