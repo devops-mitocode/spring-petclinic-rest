@@ -8,6 +8,9 @@ spec:
     matchLabels:
       app: spring-petclinic-rest
   template:
+    metadata:
+      labels:
+        app: spring-petclinic-rest
     spec:
       automountServiceAccountToken: false
       containers:
