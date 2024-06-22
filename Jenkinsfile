@@ -19,6 +19,7 @@ pipeline {
             steps {
                 sh 'mvn test -B -ntp'
                 junit 'target/surefire-reports/*.xml'
+                jacoco()
             }
         }        
         stage('Package') {
