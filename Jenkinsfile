@@ -1,9 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:3.8.8-eclipse-temurin-17-alpine'
-        }
-    }
+    agent none
     // tools {
     //     maven 'maven3.8.8'
     // }
@@ -14,6 +10,11 @@ pipeline {
         //     }
         // }
         stage('Compile') {
+            agent {
+                docker {
+                    image 'maven:3.8.8-eclipse-temurin-17-alpine'
+                }
+            }
             steps {
                 sh 'mvn clean compile -B -ntp'
             }
