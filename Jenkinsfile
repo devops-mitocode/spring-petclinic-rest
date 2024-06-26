@@ -30,11 +30,18 @@ pipeline {
                 sh 'mvn package -DskipTests -B -ntp'
             }
         }
+        // stage('Sonarqube') {
+        //     steps {
+        //         withSonarQubeEnv('sonarqube') {
+        //             sh 'env | sort'
+        //             sh 'mvn sonar:sonar -B -ntp'
+        //         }
+        //     }
+        // }
         stage('Sonarqube') {
             steps {
-                withSonarQubeEnv('sonarqube') {
-                    sh 'env | sort'
-                    sh 'mvn sonar:sonar -B -ntp'
+                withCredentials([file(credentialsId: 'sonarqube-settings', variable: 'M2_SETTINGS')]) {
+                    sh "mvn sonar:sonar -B -ntp -s ${M2_SETTINGS}"
                 }
             }
         }
