@@ -21,7 +21,6 @@ pipeline {
                     def snapshot = 'spring-petclinic-rest-snapshot'
 
                     def server = Artifactory.server 'artifactory'
-                    server.tool()
 
                     // Forma 1
                     def rtMaven = Artifactory.newMavenBuild()
