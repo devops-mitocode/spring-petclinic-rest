@@ -15,11 +15,13 @@ pipeline {
                script{
 
                     sh 'env | sort'
+                    env.MAVEN_HOME='/usr/share/maven'
 
                     def release = 'spring-petclinic-rest-release'
                     def snapshot = 'spring-petclinic-rest-snapshot'
 
                     def server = Artifactory.server 'artifactory'
+                    server.tool()
 
                     // Forma 1
                     def rtMaven = Artifactory.newMavenBuild()
