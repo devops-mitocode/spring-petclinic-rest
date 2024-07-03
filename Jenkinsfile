@@ -29,33 +29,51 @@ pipeline {
                     // server.publishBuildInfo buildInfo
 
                     // Forma 2
-                    def pom = readMavenPom file : 'pom.xml'
-                    println pom
-                    println env.GIT_BRANCH
+                    // def pom = readMavenPom file : 'pom.xml'
+                    // println pom
+                    // println env.GIT_BRANCH
 
-                    def targetRepo
-                    if (env.GIT_BRANCH == 'origin/master' || env.GIT_BRANCH.startsWith('release/')) {
-                        targetRepo = 'spring-petclinic-rest-release'
-                    } else {
-                        targetRepo = 'spring-petclinic-rest-snapshot'
-                    }
-                    def uploadSpec = """
-                        {
-                            "files": [
-                                {
-                                    "pattern": "target/.*.jar",
-                                    "target": "${targetRepo}/${pom.groupId}/${pom.artifactId}/${pom.version}/",
-                                    "regexp": "true",
-                                    "props": "build.url=${RUN_DISPLAY_URL};build.user=${USER}"
-                                }
-                            ]
-                        }
-                    """
-                    server.upload spec: uploadSpec
+                    // def targetRepo
+                    // if (env.GIT_BRANCH == 'origin/master' || env.GIT_BRANCH.startsWith('release/')) {
+                    //     targetRepo = 'spring-petclinic-rest-release'
+                    // } else {
+                    //     targetRepo = 'spring-petclinic-rest-snapshot'
+                    // }
+                    // def uploadSpec = """
+                    //     {
+                    //         "files": [
+                    //             {
+                    //                 "pattern": "target/.*.jar",
+                    //                 "target": "${targetRepo}/${pom.groupId}/${pom.artifactId}/${pom.version}/",
+                    //                 "regexp": "true",
+                    //                 "props": "build.url=${RUN_DISPLAY_URL};build.user=${USER}"
+                    //             }
+                    //         ]
+                    //     }
+                    // """
+                    // server.upload spec: uploadSpec
 
 
                }
            }
+        }
+        stage('Nexus') {
+            steps {
+                script {
+                    def pom = readMavenPom file: 'pom.xml'
+                    println pom
+
+                    nexusPublisher nexusInstanceId: 'nexus',
+                    nexusRepositoryId: 'spring-petclinic-rest-release',
+                    packages: [[$class: 'MavenPackage',
+                    mavenAssetList: [[classifier: '', extension: '', filePath: "target/${pom.artifactId}-${pom.version}.jar"]],
+                    mavenCoordinate: [
+                    groupId: "${pom.groupId}",
+                    artifactId: "${pom.artifactId}",
+                    packaging: 'jar',
+                    version: "${pom.version}-${BUILD_NUMBER}"]]]
+                } 
+            }
         }
     }
     // post{
