@@ -64,7 +64,7 @@ pipeline {
                     println pom
 
                     nexusPublisher nexusInstanceId: 'nexus',
-                    nexusRepositoryId: 'spring-petclinic-rest-snapshot',
+                    nexusRepositoryId: 'spring-petclinic-rest-mixed',
                     packages: [[$class: 'MavenPackage',
                     mavenAssetList: [[classifier: '', extension: '', filePath: "target/${pom.artifactId}-${pom.version}.jar"]],
                     mavenCoordinate: [
