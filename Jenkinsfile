@@ -34,7 +34,7 @@ pipeline {
                     println env.GIT_BRANCH
 
                     def targetRepo
-                    if (env.GIT_BRANCH == 'master' || env.GIT_BRANCH.startsWith('release/')) {
+                    if (env.GIT_BRANCH == 'origin/master' || env.GIT_BRANCH.startsWith('release/')) {
                         targetRepo = 'spring-petclinic-rest-release'
                     } else {
                         targetRepo = 'spring-petclinic-rest-snapshot'
