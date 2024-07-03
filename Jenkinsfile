@@ -24,6 +24,7 @@ pipeline {
 
                     docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-credentials') {
                         app.push()
+                        app.push('latest')
                     }
                 }
             }
