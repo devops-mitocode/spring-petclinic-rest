@@ -14,7 +14,18 @@ pipeline {
         stage('Dockerhub') {
             agent any
             steps {
-                sh 'docker --version'
+                script {
+                    def pom = readMavenPom file: 'pom.xml'
+                    println pom
+
+                    // sh 'docker build -t spring-petclinic-rest .'
+
+                    def app = docker.build("danycenas/${pom.artifactId}:${pom.version}")
+
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-credentials') {
+                        app.push()
+                    }
+                }
             }
         }
     }
