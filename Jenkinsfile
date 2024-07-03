@@ -71,7 +71,7 @@ pipeline {
                     groupId: "${pom.groupId}",
                     artifactId: "${pom.artifactId}",
                     packaging: 'jar',
-                    version: "${pom.version}-${BUILD_NUMBER}"]]]
+                    version: "${pom.version}"]]]
                 } 
             }
         }
