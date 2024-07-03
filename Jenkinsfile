@@ -10,5 +10,10 @@ pipeline {
                 sh 'mvn clean package -DskipTests -B -ntp'
             }
         }
+        stage('Dockerhub') {
+            steps {
+                sh 'docker --version'
+            }
+        }
     }
 }
