@@ -5,11 +5,11 @@ pipeline {
         }
     }
     stages {
-        stage('Build') {
-            steps {
-                sh 'mvn clean package -DskipTests -B -ntp'
-            }
-        }
+        // stage('Build') {
+        //     steps {
+        //         sh 'mvn clean package -DskipTests -B -ntp'
+        //     }
+        // }
         stage('Artifactory') {
            steps {
                script{
@@ -23,10 +23,10 @@ pipeline {
                     def server = Artifactory.server 'artifactory'
 
                     // Forma 1
-                    // def rtMaven = Artifactory.newMavenBuild()
-                    // rtMaven.deployer server: server, releaseRepo: release, snapshotRepo: snapshot
-                    // def buildInfo = rtMaven.run pom: 'pom.xml', goals: 'clean install -B -ntp -DskipTests'
-                    // server.publishBuildInfo buildInfo
+                    def rtMaven = Artifactory.newMavenBuild()
+                    rtMaven.deployer server: server, releaseRepo: release, snapshotRepo: snapshot
+                    def buildInfo = rtMaven.run pom: 'pom.xml', goals: 'clean install -B -ntp -DskipTests'
+                    server.publishBuildInfo buildInfo
 
                     // Forma 2
                     // def pom = readMavenPom file : 'pom.xml'
