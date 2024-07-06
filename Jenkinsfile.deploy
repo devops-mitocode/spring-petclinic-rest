@@ -16,7 +16,7 @@ properties([
                 import jenkins.model.*
                 import groovy.json.JsonSlurper
                 
-                def url = 'http://35.90.110.127:8081/artifactory/api/storage/spring-petclinic-rest-snapshot/org.springframework.samples/spring-petclinic-rest'
+                def url = 'http://35.90.110.127:8081/artifactory/api/storage/spring-petclinic-rest-snapshot/org/springframework/samples/spring-petclinic-rest'
                 def http_client = new URL(url).openConnection() as HttpURLConnection
                 http_client.setRequestProperty("Authorization", "Basic YWRtaW46TWl0b0NvZGUyMDI0")
                 http_client.setRequestMethod('GET')
