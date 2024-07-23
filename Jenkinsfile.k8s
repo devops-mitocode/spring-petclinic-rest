@@ -28,12 +28,13 @@ pipeline {
                     script {
                         def pom = readMavenPom file: 'pom.xml'
                         def image = "danycenas/${pom.artifactId}:${pom.version}"
-                        def app = docker.build("${image}")
 
-                        // docker.withRegistry('https://registry.hub.docker.com/', 'dockerhub-credentials') {
-                        //     app.push()
-                        //     app.push('latest')
-                        // }
+                        // Crear y usar una instancia de buildx
+                        sh 'docker buildx create --use'
+                        
+                        // Construir y empujar la imagen usando buildx
+                        sh "docker buildx build -t ${image} --push ."
+                        sh "docker buildx build -t ${image}:latest --push ."
                     }
                 }
             }
