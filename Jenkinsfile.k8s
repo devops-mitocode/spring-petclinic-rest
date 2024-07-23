@@ -15,13 +15,14 @@ pipeline {
             }
         }
         stage('Upload image') {
-            options {
-                skipDefaultCheckout()
-            }
+            // options {
+            //     skipDefaultCheckout()
+            // }
             steps {
                 container('docker'){
                     sh 'cat /etc/os-release'
                     sh 'docker --version'
+                    sh 'git --version'
                     sh 'whoami'
 
                     script {
