@@ -30,7 +30,7 @@ pipeline {
                         def image = "danycenas/${pom.artifactId}:${pom.version}"
 
                         // Crear y usar una instancia de buildx
-                        sh 'docker buildx create --use'
+                        // sh 'docker buildx create --use'
 
                         withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                             sh """
