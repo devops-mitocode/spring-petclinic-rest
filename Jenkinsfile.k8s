@@ -33,11 +33,11 @@ pipeline {
                         // sh 'docker buildx create --use'
 
                         withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                            sh """
-                                echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
+                            sh '''
+                                echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
                                 docker buildx build -t ${image} --push .
                                 docker buildx build -t ${image}:latest --push .
-                            """
+                            '''
                         }
                     }
                 }
