@@ -15,9 +15,6 @@ pipeline {
             }
         }
         stage('Upload image') {
-            // options {
-            //     skipDefaultCheckout()
-            // }
             steps {
                 container('docker'){
                     sh 'cat /etc/os-release'
@@ -29,9 +26,6 @@ pipeline {
                         def pom = readMavenPom file: 'pom.xml'
                         def imageVersion = "danycenas/${pom.artifactId}:${pom.version}"
                         def imageLatest = "danycenas/${pom.artifactId}:latest"
-
-                        // Crear y usar una instancia de buildx
-                        //sh 'docker buildx create --use'
 
                         withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                             sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
