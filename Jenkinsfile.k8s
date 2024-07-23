@@ -1,0 +1,55 @@
+pipeline {
+    agent {
+        kubernetes {
+            defaultContainer 'maven'
+            yamlFile 'KubernetesPod.yaml'
+        }
+    }
+    stages {
+        stage('Build') {
+            steps {
+                container('maven'){
+                    sh 'cat /etc/os-release'
+                    sh 'mvn clean package -DskipTests -B -ntp'
+                }
+            }
+        }
+        stage('Upload image') {
+            steps {
+                container('docker'){
+                    sh 'cat /etc/os-release'
+                    sh 'docker --version'
+                    sh 'whoami'
+
+                    script {
+                        def pom = readMavenPom file: 'pom.xml'
+                        def image = "danycenas/${pom.artifactId}:${pom.version}"
+                        def app = docker.build("${image}")
+
+                        docker.withRegistry('https://registry.hub.docker.com/', 'dockerhub-credentials') {
+                            app.push()
+                            app.push('latest')
+                        }
+                    }
+                }
+            }
+        }
+        stage('k8s deploy') {
+            steps {
+                withKubeConfig([credentialsId: 'kubernetes-credentials']) {
+                    sh 'whoami'
+
+                    sh 'curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"'
+                    sh 'install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl'
+                    sh 'chmod u+x ./kubectl'
+
+                    sh 'which kubectl'
+                    sh '/usr/local/bin/kubectl version --client --output=yaml'
+                    sh 'kubectl version'
+                    
+                    sh 'kubectl apply -f deployment.yaml'
+                }
+            }
+        }
+    }
+}
