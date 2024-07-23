@@ -31,10 +31,14 @@ pipeline {
 
                         // Crear y usar una instancia de buildx
                         sh 'docker buildx create --use'
-                        
-                        // Construir y empujar la imagen usando buildx
-                        sh "docker buildx build -t ${image} --push ."
-                        sh "docker buildx build -t ${image}:latest --push ."
+
+                        withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                            sh """
+                                echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
+                                docker buildx build -t ${image} --push .
+                                docker buildx build -t ${image}:latest --push .
+                            """
+                        }
                     }
                 }
             }
