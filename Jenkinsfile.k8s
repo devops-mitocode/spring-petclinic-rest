@@ -38,25 +38,22 @@ pipeline {
                 }
             }
         }
-        // stage('k8s deploy') {
-        //     options {
-        //         skipDefaultCheckout()
-        //     }            
-        //     steps {
-        //         withKubeConfig([credentialsId: 'kubernetes-credentials']) {
-        //             sh 'whoami'
+        stage('K8s deploy') {           
+            steps {
+                withKubeConfig([credentialsId: 'kubernetes-credentials']) {
+                    sh 'whoami'
 
-        //             sh 'curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"'
-        //             sh 'install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl'
-        //             sh 'chmod u+x ./kubectl'
+                    sh 'curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"'
+                    sh 'install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl'
+                    sh 'chmod u+x ./kubectl'
 
-        //             sh 'which kubectl'
-        //             sh '/usr/local/bin/kubectl version --client --output=yaml'
-        //             sh 'kubectl version'
+                    sh 'which kubectl'
+                    sh '/usr/local/bin/kubectl version --client --output=yaml'
+                    sh 'kubectl version'
                     
-        //             sh 'kubectl apply -f deployment.yaml'
-        //         }
-        //     }
-        // }
+                    sh 'kubectl apply -f deployment.yaml'
+                }
+            }
+        }
     }
 }
