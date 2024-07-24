@@ -4,7 +4,6 @@ metadata:
   name: spring-petclinic-rest-service
 spec:
   selector:
-    # type: NodePort
     app: spring-petclinic-rest
   ports:
     - protocol: "TCP"
