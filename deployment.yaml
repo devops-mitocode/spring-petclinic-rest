@@ -20,6 +20,6 @@ spec:
             limits:
               cpu: "0.5"
               memory: "1Gi"
-          image: $(IMAGE_VERSION)
+          image: danycenas/spring-petclinic-rest:latest
           ports:
             - containerPort: 9966

@@ -53,6 +53,8 @@ pipeline {
                     sh '/usr/local/bin/kubectl version --client --output=yaml'
                     sh 'kubectl version'
                     
+                    sh "sed -i 's|image: danycenas/spring-petclinic-rest:latest|image: ${IMAGE_VERSION}|' deployment.yaml"
+                    sh 'cat deployment.yaml'
                     sh 'kubectl apply -f deployment.yaml'
                     sh 'kubectl apply -f service.yaml'
                 }
