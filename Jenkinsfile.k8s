@@ -26,6 +26,7 @@ pipeline {
                         def pom = readMavenPom file: 'pom.xml'
                         def imageVersion = "danycenas/${pom.artifactId}:${pom.version}"
                         def imageLatest = "danycenas/${pom.artifactId}:latest"
+                        env.IMAGE_VERSION = "${imageVersion}"
 
                         withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                             sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
