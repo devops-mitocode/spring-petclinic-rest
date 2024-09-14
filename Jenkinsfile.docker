@@ -11,5 +11,10 @@ pipeline {
                 sh 'mvn clean package -DskipTests -B -ntp'
             }
         }
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker --version'
+            }
+        }        
     }
 }
