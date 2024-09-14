@@ -35,11 +35,14 @@ pipeline {
                     // Forma 2: Usando docker buildx para Multiplatform
 
                     sh 'docker buildx version'
+                    sh 'docker buildx create --use'
+                    sh 'docker buildx inspect --bootstrap'
+
                     withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                         sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
                         sh """
-                            docker buildx build -t danycenas/${pom.artifactId}:${pom.version} --platform linux/amd64 --push .
-                            docker buildx build -t danycenas/${pom.artifactId}:latest --platform linux/amd64 --push .
+                            docker buildx build -t danycenas/${pom.artifactId}:${pom.version} --platform linux/amd64,linux/arm64 --push .
+                            docker buildx build -t danycenas/${pom.artifactId}:latest --platform linux/amd64,linux/arm64 --push .
                         """
                     }
                 }
