@@ -61,47 +61,49 @@ pipeline {
 
                     // Forma 1
 
-                    sh 'env | sort'
-                    env.MAVEN_HOME = '/usr/share/maven'
+                    // sh 'env | sort'
+                    // env.MAVEN_HOME = '/usr/share/maven'
 
-                    def releases = 'spring-petclinic-rest-release'
-                    def snapshots = 'spring-petclinic-rest-snapshot'
+                    // def releases = 'spring-petclinic-rest-release'
+                    // def snapshots = 'spring-petclinic-rest-snapshot'
 
-                    def server = Artifactory.server 'artifactory'
-                    def rtMaven = Artifactory.newMavenBuild()
-                    rtMaven.deployer server: server, releaseRepo: releases, snapshotRepo: snapshots
-                    def buildInfo = rtMaven.run pom: 'pom.xml', goals: 'clean package -B -ntp -DskipTests'
+                    // def server = Artifactory.server 'artifactory'
+                    // def rtMaven = Artifactory.newMavenBuild()
+                    // rtMaven.deployer server: server, releaseRepo: releases, snapshotRepo: snapshots
+                    // def buildInfo = rtMaven.run pom: 'pom.xml', goals: 'clean install -B -ntp -DskipTests'
 
-                    server.publishBuildInfo buildInfo
+                    // server.publishBuildInfo buildInfo
 
                     // Forma 2 - File Spec
 
-                    // def pom = readMavenPom file : 'pom.xml'
-                    // println pom
-                    // println env.GIT_BRANCH
+                    def pom = readMavenPom file : 'pom.xml'
+                    println pom
+                    println env.GIT_BRANCH
 
-                    // def targetRepo
-                    // if (env.GIT_BRANCH == 'master' || env.GIT_BRANCH.startsWith('release/')) {
-                    //     targetRepo = 'spring-petclinic-rest-release'
-                    // } else {
-                    //     targetRepo = 'spring-petclinic-rest-snapshot'
-                    // }
+                    def targetRepo
+                    def branchName = env.GIT_BRANCH.startsWith('origin/') ? env.GIT_BRANCH.replace('origin/', '') : env.GIT_BRANCH
+                    println branchName
 
-                    // def server = Artifactory.server 'artifactory'
-                    // def uploadSpec = """
-                    //     {
-                    //         "files": [
-                    //             {
-                    //                 "pattern": "target/.*.jar",
-                    //                 "target": "${targetRepo}/${pom.groupId}/${pom.artifactId}/${pom.version}/",
-                    //                 "regexp": "true",
-                    //                 "props": "build.url=${RUN_DISPLAY_URL};build.user=${USER}"
-                    //             }
-                    //         ]
-                    //     }
-                    // """
-                    // server.upload spec: uploadSpec
+                    if (branchName == 'master' || branchName.startsWith('release/')) {
+                        targetRepo = 'spring-petclinic-rest-release'
+                    } else {
+                        targetRepo = 'spring-petclinic-rest-snapshot'
+                    }
 
+                    def server = Artifactory.server 'artifactory'
+                    def uploadSpec = """
+                        {
+                            "files": [
+                                {
+                                    "pattern": "target/.*.jar",
+                                    "target": "${targetRepo}/${pom.groupId}/${pom.artifactId}/${pom.version}/",
+                                    "regexp": "true",
+                                    "props": "build.url=${RUN_DISPLAY_URL};build.user=${USER}"
+                                }
+                            ]
+                        }
+                    """
+                    server.upload spec: uploadSpec
                 }
             }
         }
