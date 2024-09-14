@@ -53,7 +53,7 @@ pipeline {
         stage('Download Artifact') {
             steps {
                 sh """
-                    url --location '${ARTIFACTORY_URL}/${REPO}/org.springframework.samples/spring-petclinic-rest/${params.version}/spring-petclinic-rest-${params.version}.jar' \\
+                    curl --location '${ARTIFACTORY_URL}/${REPO}/org.springframework.samples/spring-petclinic-rest/${params.version}/spring-petclinic-rest-${params.version}.jar' \\
                          --header '${AUTH_HEADER}' \\
                          --output spring-petclinic-rest-${params.version}.jar
                 
