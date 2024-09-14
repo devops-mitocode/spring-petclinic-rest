@@ -42,9 +42,14 @@ pipeline {
 
                             docker buildx create --use
                             docker buildx inspect --bootstrap
-                            
-                            docker buildx build -t danycenas/${pom.artifactId}:${pom.version} --platform linux/amd64,linux/arm64 --push .
-                            docker buildx build -t danycenas/${pom.artifactId}:latest --platform linux/amd64,linux/arm64 --push .
+
+                            # docker buildx build -t danycenas/${pom.artifactId}:${pom.version} --platform linux/amd64,linux/arm64 --push .
+                            # docker buildx build -t danycenas/${pom.artifactId}:latest --platform linux/amd64,linux/arm64 --push .
+
+                            docker buildx build \
+                                -t danycenas/${pom.artifactId}:${pom.version} \
+                                -t danycenas/${pom.artifactId}:latest \
+                                --platform linux/amd64,linux/arm64 --push .                            
                         """
                     }
                 }
