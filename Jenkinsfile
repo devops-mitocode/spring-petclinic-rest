@@ -78,10 +78,10 @@ pipeline {
 
                     def pom = readMavenPom file : 'pom.xml'
                     println pom
-                    println env.GIT_BRANCH
 
                     def targetRepo
                     def branchName = env.GIT_BRANCH.startsWith('origin/') ? env.GIT_BRANCH.replace('origin/', '') : env.GIT_BRANCH
+                    println env.GIT_BRANCH
                     println branchName
 
                     if (branchName == 'master' || branchName.startsWith('release/')) {
