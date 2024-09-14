@@ -1,0 +1,53 @@
+properties([
+    parameters([
+        [$class: 'CascadeChoiceParameter',
+         choiceType: 'PT_SINGLE_SELECT',
+         description: 'Select the version of your application',
+         filterLength: 1,
+         filterable: false,
+         name: 'version',
+         script: [
+             $class: 'GroovyScript',
+             script: [
+                     classpath: [],
+                     sandbox: false,
+                     script:
+                             ''' 
+                        import jenkins.model.*
+                        import groovy.json.JsonSlurper
+
+                        def url = 'http://18.236.129.47:8081/artifactory/api/storage/spring-petclinic-rest-release/org/springframework/samples/spring-petclinic-rest'
+                        def http_client = new URL(url).openConnection() as HttpURLConnection
+                        http_client.setRequestProperty("Authorization", "Basic YWRtaW46TWl0b2NvZGUyMDI0")
+                        http_client.setRequestMethod('GET')
+                        http_client.connect()
+                        def response = [:]
+                        if (http_client.responseCode == 200) {
+                        response = new JsonSlurper().parseText(http_client.inputStream.getText('UTF-8'))
+                        } else {
+                        return ['No results']
+                        }
+                        def version_list = response.children.collect { it.uri.replaceAll('/', '') }
+                        if (version_list) {
+                            return version_list.sort()
+                        }
+                    '''
+             ]
+         ]
+        ]
+    ])
+])
+pipeline {
+    agent {
+        docker {
+            image 'maven:3.8.8-eclipse-temurin-17-alpine'
+        }
+    }
+    stages {
+        stage('Package') {
+            steps {
+                sh 'mvn clean package -DskipTests -B -ntp'
+            }
+        }      
+    }
+}
