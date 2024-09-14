@@ -84,9 +84,9 @@ pipeline {
                     println env.GIT_BRANCH
                     println branchName
 
-                    if (branchName == 'master' || branchName.startsWith('release/')) {
+                    if (branchName == 'master') {
                         targetRepo = 'spring-petclinic-rest-release'
-                    } else {
+                    } else if (branchName == 'develop' || branchName.startsWith('feature/') || branchName.startsWith('hotfix/') || branchName.startsWith('release/')) {
                         targetRepo = 'spring-petclinic-rest-snapshot'
                     }
 
