@@ -43,10 +43,20 @@ pipeline {
             image 'maven:3.8.8-eclipse-temurin-17-alpine'
         }
     }
+    environment {
+        ARTIFACTORY_URL = 'http://18.236.129.47:8081/artifactory'
+        REPO = 'spring-petclinic-rest-snapshot'
+        RELEASE_REPO = 'spring-petclinic-rest-release'
+        AUTH_HEADER = 'Authorization: Basic YWRtaW46TWl0b2NvZGUyMDI0'
+    }    
     stages {
-        stage('Package') {
+        stage('Download Artifact') {
             steps {
-                sh 'mvn clean package -DskipTests -B -ntp'
+                sh """
+                    curl -u admin:Mitocode2024 -O -L ${ARTIFACTORY_URL}/${RELEASE_REPO}/org/springframework/samples/spring-petclinic-rest/\${params.version}/spring-petclinic-rest-\${params.version}.jar
+                
+                    ls -la
+                """
             }
         }      
     }
