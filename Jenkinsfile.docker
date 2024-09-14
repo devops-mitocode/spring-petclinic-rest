@@ -20,7 +20,7 @@ pipeline {
 
                     def pom = readMavenPom file: 'pom.xml'
 
-                    // Forma 1: Usando docker build
+                    // Forma 1: Usando docker build para misma arquitectura host
 
                     // sh 'docker build -t danycenas/spring-petclinic-rest:3.2.1 .'
 
@@ -32,9 +32,16 @@ pipeline {
                     //     app.push('latest')
                     // }
 
-                    // Forma 2: Usando docker buildx
+                    // Forma 2: Usando docker buildx para Multiplatform
 
-                    sh 'docker buildx --version'
+                    sh 'docker buildx version'
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                        sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+                        sh """
+                            docker buildx build -t danycenas/${pom.artifactId}:${pom.version} --platform linux/amd64,linux/arm64 --push .
+                            docker buildx build -t danycenas/${pom.artifactId}:latest --platform linux/amd64,linux/arm64 --push .
+                        """
+                    }
                 }
             }
         }        
