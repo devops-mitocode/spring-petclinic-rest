@@ -70,7 +70,7 @@ pipeline {
                     def server = Artifactory.server 'artifactory'
                     def rtMaven = Artifactory.newMavenBuild()
                     rtMaven.deployer server: server, releaseRepo: releases, snapshotRepo: snapshots
-                    def buildInfo = rtMaven.run pom: 'pom.xml', goals: 'clean install -B -ntp -DskipTests'
+                    def buildInfo = rtMaven.run pom: 'pom.xml', goals: 'clean package -B -ntp -DskipTests'
 
                     server.publishBuildInfo buildInfo
 
