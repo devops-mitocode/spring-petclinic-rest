@@ -20,7 +20,7 @@ pipeline {
 
                     def pom = readMavenPom file: 'pom.xml'
 
-                    // Forma 1: Usando docker build para misma arquitectura host
+                    // Forma 1: Usando docker build para misma plataforma del host
 
                     // sh 'docker build --help'
                     // sh 'docker build -t danycenas/spring-petclinic-rest:3.2.1 .'
@@ -30,7 +30,7 @@ pipeline {
                     //     app.push('latest')
                     // }
 
-                    // Forma 2: Usando docker buildx para Multiplatform
+                    // Forma 2: Usando docker buildx para multiplatforma
 
                     sh 'docker buildx version'
                     withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
