@@ -22,7 +22,7 @@ pipeline {
 
                     // Forma 1: Usando docker build para misma arquitectura host
 
-                    sh 'docker build --help'
+                    // sh 'docker build --help'
                     // sh 'docker build -t danycenas/spring-petclinic-rest:3.2.1 .'
                     // def app = docker.build("danycenas/${pom.artifactId}:${pom.version}")
                     // docker.withRegistry('https://registry.hub.docker.com/', 'dockerhub-credentials') {
