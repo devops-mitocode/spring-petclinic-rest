@@ -39,7 +39,7 @@ pipeline {
                             docker buildx build \
                                 -t danycenas/${pom.artifactId}:${pom.version} \
                                 -t danycenas/${pom.artifactId}:latest \
-                                --platform linux/amd64,linux/arm64 --push .
+                                --platform linux/amd64 --push .
                         """
                     }
                 }
