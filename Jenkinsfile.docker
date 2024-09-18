@@ -33,6 +33,7 @@ pipeline {
                     // Forma 2: Usando docker buildx para multiplatforma
 
                     sh 'docker buildx version'
+                    sh 'docker run --privileged --rm tonistiigi/binfmt --install all'
                     withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                         sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
                         sh """
