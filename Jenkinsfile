@@ -6,6 +6,7 @@ pipeline {
     stages {
         stage('Test') {
             steps {
+                sh 'env | sort'
                 sh 'mvn clean test -B -ntp'  
             }
             post {
@@ -32,7 +33,6 @@ pipeline {
         stage('SonarQube') {
             steps {
                 withSonarQubeEnv('sonarqube'){
-                    sh 'env | sort'
                     // sh 'mvn sonar:sonar -B -ntp'
                     script {
                         def branchName = GIT_BRANCH.split('/').last()
