@@ -6,7 +6,7 @@ pipeline {
     stages {
        stage('Test') {
            steps {
-                sh 'mvn clean test-B -ntp'
+                sh 'mvn clean test -B -ntp'
                 junit 'target/surefire-reports/*.xml'
                 recordCoverage(tools: [[parser: 'JACOCO']])
            }
