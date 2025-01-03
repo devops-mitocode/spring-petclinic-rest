@@ -49,21 +49,6 @@ pipeline {
                 }
             }
         }
-        // stage('sonarqube') {
-        //     steps {
-        //         sh 'env | sort'
-        //         withSonarQubeEnv('sonarqube') {
-        //             // sh './mvnw sonar:sonar'
-        //             // sh './mvnw sonar:sonar -Dsonar.branch.name=master'
-
-
-        //             script {
-        //                 def branchName = GIT_BRANCH.split('/').last()
-        //                 sh "./mvnw sonar:sonar -Dsonar.branch.name=${branchName}"
-        //             }
-        //         }
-        //     }
-        // }
     }
     post{
         always{
