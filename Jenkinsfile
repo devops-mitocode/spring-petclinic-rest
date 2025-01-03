@@ -32,7 +32,12 @@ pipeline {
         stage('SonarQube') {
             steps {
                 withSonarQubeEnv('sonarqube'){
-                    sh 'mvn sonar:sonar -B -ntp'
+                    sh 'env | sort'
+                    // sh 'mvn sonar:sonar -B -ntp'
+                    script {
+                        def branchName = GIT_BRANCH.split('/').last()
+                        sh "mvn sonar:sonar -Dsonar.branch.name=${branchName}"
+                    }
                 }
             }
         }
