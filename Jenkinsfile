@@ -36,7 +36,7 @@ pipeline {
                     // sh 'mvn sonar:sonar -B -ntp'
                     script {
                         def branchName = GIT_BRANCH.split('/').last()
-                        sh "mvn sonar:sonar -Dsonar.branch.name=${branchName}"
+                        sh "mvn sonar:sonar -B -ntp -Dsonar.branch.name=${branchName}"
                     }
                 }
             }
