@@ -33,11 +33,11 @@ pipeline {
         stage('SonarQube') {
             steps {
                 withSonarQubeEnv('sonarqube'){
-                    sh 'mvn sonar:sonar -B -ntp'
+                    // sh 'mvn sonar:sonar -B -ntp'
                     script {
                         def branchName = GIT_BRANCH.replaceFirst('^origin/', '')
                         println "Branch name: ${branchName}"
-                        // sh "mvn sonar:sonar -B -ntp -Dsonar.branch.name=${branchName}"
+                        sh "mvn sonar:sonar -B -ntp -Dsonar.branch.name=${branchName}"
                     }
                 }
             }
