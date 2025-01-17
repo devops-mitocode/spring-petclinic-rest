@@ -18,7 +18,7 @@ pipeline {
                 sh 'mvn clean test -B -ntp'
             }
         }
-        stage('Build') {
+        stage('Package') {
             steps {
                 sh 'mvn clean package -B -ntp'
             }
