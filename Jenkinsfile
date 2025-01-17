@@ -1,8 +1,8 @@
 pipeline {
-    agent any
-    tools{
-        jdk 'java11'
-        maven 'maven3.8.8'
+    agent {
+        docker {
+            image 'maven:3.8.8-eclipse-temurin-17-alpine'
+        }
     }
     triggers {
         githubPush()
