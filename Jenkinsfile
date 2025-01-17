@@ -1,6 +1,7 @@
 pipeline {
     agent any
     tools{
+        jdk 'java21'
         maven 'maven3.8.8'
     }
     triggers {
@@ -14,6 +15,7 @@ pipeline {
         // }
         stage('Build') {
             steps {
+                sh 'java -version'
                 sh 'mvn clean package -DskipTests -B -ntp'
             }
         }        
