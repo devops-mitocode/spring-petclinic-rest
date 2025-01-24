@@ -15,10 +15,24 @@ pipeline {
                 sh 'mvn clean package -B -ntp'
             }
         }
-        stage('Sonarqube') {
+        stage('SonarQube') {
             steps {
-                withSonarQubeEnv('sonarqube') {
-                    sh 'mvn sonar:sonar -B -ntp'
+                withSonarQubeEnv('sonarqube'){
+                    sh 'env | sort'
+                    script {
+                        if (env.CHANGE_ID) {
+                            sh """
+                                mvn sonar:sonar -B -ntp \
+                                -Dsonar.pullrequest.key=${env.CHANGE_ID} \
+                                -Dsonar.pullrequest.branch=${env.CHANGE_BRANCH} \
+                                -Dsonar.pullrequest.base=${env.CHANGE_TARGET}
+                            """
+                        } else {
+                            def branchName = GIT_BRANCH.replaceFirst('^origin/', '')
+                            println "Branch name: ${branchName}"
+                            sh "mvn sonar:sonar -B -ntp -Dsonar.branch.name=${branchName} -Dsonar.branch.target=${branchName}"
+                        }
+                    }
                 }
             }
         }
