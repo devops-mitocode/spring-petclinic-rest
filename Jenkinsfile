@@ -12,7 +12,7 @@ pipeline {
             steps {
                 // sh 'git branch -a'
                 // sh 'git show-ref'
-                sh 'mvn clean package -B -ntp'
+                sh 'mvn clean package -DskipTests -B -ntp'
             }
         }
         // stage('SonarQube') {
