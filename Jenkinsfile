@@ -12,6 +12,7 @@ pipeline {
             steps {
                 // sh 'git branch -a'
                 // sh 'git show-ref'
+                sh 'env | sort'
                 sh 'mvn clean package -DskipTests -B -ntp'
             }
         }
