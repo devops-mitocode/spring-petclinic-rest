@@ -41,6 +41,8 @@ pipeline {
            steps {
                script {
                     // Forma 1
+                    sh 'env | sort'
+
                     def releases = 'spring-petclinic-rest-release'
                     def snapshots = 'spring-petclinic-rest-snapshot'
 
