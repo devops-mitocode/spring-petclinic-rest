@@ -72,6 +72,7 @@ pipeline {
 
                     def server = Artifactory.server 'artifactory'
                     def groupIdPath = pom.groupId.replaceAll(".", "/")
+                    println groupIdPath
 
                     def uploadSpec = """
                         {
