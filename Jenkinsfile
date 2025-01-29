@@ -71,12 +71,14 @@ pipeline {
                     }
 
                     def server = Artifactory.server 'artifactory'
+                    def groupIdPath = pom.groupId.replaceAll(".", "/")
+
                     def uploadSpec = """
                         {
                             "files": [
                                 {
                                     "pattern": "target/.*.jar",
-                                    "target": "${targetRepo}/${pom.groupId}/${pom.artifactId}/${pom.version}/",
+                                    "target": "${targetRepo}/${groupIdPath}/${pom.artifactId}/${pom.version}/",
                                     "regexp": "true",
                                     "props": "build.url=${RUN_DISPLAY_URL};build.user=${USER}"
                                 }
