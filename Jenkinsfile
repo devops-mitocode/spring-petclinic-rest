@@ -92,24 +92,38 @@ pipeline {
     //            }
     //        }
     //    }
-        stage('Nexus') {
+        // stage('Nexus') {
+        //     steps {
+        //         script {
+        //             def pom = readMavenPom file: 'pom.xml'
+        //             println pom
+
+        //             nexusPublisher nexusInstanceId: 'nexus',
+        //             nexusRepositoryId: 'spring-petclinic-rest-releases',
+        //             packages: [[$class: 'MavenPackage',
+        //             mavenAssetList: [[classifier: '', extension: '', filePath: "target/${pom.artifactId}-${pom.version}.${pom.packaging}"]],
+        //             mavenCoordinate: [
+        //             groupId: "${pom.groupId}",
+        //             artifactId: "${pom.artifactId}",
+        //             packaging: "${pom.packaging}",
+        //             version: "${pom.version}-${BUILD_NUMBER}"]]]
+        //         }
+        //     }
+        // }
+        stage('Dockerhub') {
             steps {
                 script {
                     def pom = readMavenPom file: 'pom.xml'
-                    println pom
 
-                    nexusPublisher nexusInstanceId: 'nexus',
-                    nexusRepositoryId: 'spring-petclinic-rest-releases',
-                    packages: [[$class: 'MavenPackage',
-                    mavenAssetList: [[classifier: '', extension: '', filePath: "target/${pom.artifactId}-${pom.version}.jar"]],
-                    mavenCoordinate: [
-                    groupId: "${pom.groupId}",
-                    artifactId: "${pom.artifactId}",
-                    packaging: 'jar',
-                    version: "${pom.version}-${BUILD_NUMBER}"]]]
+                    def app = docker.build("danycenas/${pom.artifactId}:${pom.version}")
+
+                    docker.withRegistry('https://registry.hub.docker.com/', 'dockerhub-credentials') {
+                        app.push()
+                        app.push('latest')
+                    }
                 }
             }
-        }
+        }        
     }
     post {
         success {
