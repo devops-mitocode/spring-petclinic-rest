@@ -37,62 +37,61 @@ pipeline {
         //         }
         //     }
         // }
-       stage('Artifactory') {
-           steps {
-               script {
-                    // Forma 1
-                    // sh 'env | sort'
-                    // env.MAVEN_HOME = '/usr/share/maven'
+    //    stage('Artifactory') {
+    //        steps {
+    //            script {
+    //                 // Forma 1
 
-                    // def releases = 'spring-petclinic-rest-release'
-                    // def snapshots = 'spring-petclinic-rest-snapshot'
+    //                 sh 'env | sort'
+    //                 env.MAVEN_HOME = '/usr/share/maven'
 
-                    // def server = Artifactory.server 'artifactory'
-                    // def rtMaven = Artifactory.newMavenBuild()
-                    // rtMaven.deployer server: server, releaseRepo: releases, snapshotRepo: snapshots
-                    // def buildInfo = rtMaven.run pom: 'pom.xml', goals: 'clean install -B -ntp -DskipTests'
+    //                 def releases = 'spring-petclinic-rest-release'
+    //                 def snapshots = 'spring-petclinic-rest-snapshot'
 
-                    // server.publishBuildInfo buildInfo
+    //                 def server = Artifactory.server 'artifactory'
+    //                 def rtMaven = Artifactory.newMavenBuild()
+    //                 rtMaven.deployer server: server, releaseRepo: releases, snapshotRepo: snapshots
+    //                 def buildInfo = rtMaven.run pom: 'pom.xml', goals: 'clean install -B -ntp -DskipTests'
 
-                    // Forma 2: File Spec
+    //                 server.publishBuildInfo buildInfo
 
-                    def pom = readMavenPom file : 'pom.xml'
-                    println pom
+    //                 // Forma 2: File Spec
 
-                    def targetRepo
-                    def branchName = env.GIT_BRANCH.startsWith('origin/') ? env.GIT_BRANCH.replace('origin/', '') : env.GIT_BRANCH
-                    println env.GIT_BRANCH
-                    println branchName
+    //                 def pom = readMavenPom file : 'pom.xml'
+    //                 println pom
 
-                    if (branchName == 'master') {
-                        targetRepo = 'spring-petclinic-rest-release'
-                    } else if (branchName == 'develop' || branchName.startsWith('feature/') || branchName.startsWith('hotfix/') || branchName.startsWith('release/')) {
-                        targetRepo = 'spring-petclinic-rest-snapshot'
-                    }
+    //                 def targetRepo
+    //                 def branchName = env.GIT_BRANCH.startsWith('origin/') ? env.GIT_BRANCH.replace('origin/', '') : env.GIT_BRANCH
+    //                 println env.GIT_BRANCH
+    //                 println branchName
 
-                    def server = Artifactory.server 'artifactory'
-                    println pom.groupId
-                    def groupIdPath = pom.groupId.replaceAll("\\.", "/")
-                    println groupIdPath
+    //                 if (branchName == 'master') {
+    //                     targetRepo = 'spring-petclinic-rest-release'
+    //                 } else if (branchName == 'develop' || branchName.startsWith('feature/') || branchName.startsWith('hotfix/') || branchName.startsWith('release/')) {
+    //                     targetRepo = 'spring-petclinic-rest-snapshot'
+    //                 }
 
-                    def uploadSpec = """
-                        {
-                            "files": [
-                                {
-                                    "pattern": "target/.*.jar",
-                                    "target": "${targetRepo}/${groupIdPath}/${pom.artifactId}/${pom.version}/",
-                                    "regexp": "true",
-                                    "props": "build.url=${RUN_DISPLAY_URL};build.user=${USER}"
-                                }
-                            ]
-                        }
-                    """
-                    server.upload spec: uploadSpec
+    //                 def server = Artifactory.server 'artifactory'
+    //                 println pom.groupId
+    //                 def groupIdPath = pom.groupId.replaceAll("\\.", "/")
+    //                 println groupIdPath
 
-
-               }
-           }
-       }
+    //                 def uploadSpec = """
+    //                     {
+    //                         "files": [
+    //                             {
+    //                                 "pattern": "target/.*.jar",
+    //                                 "target": "${targetRepo}/${groupIdPath}/${pom.artifactId}/${pom.version}/",
+    //                                 "regexp": "true",
+    //                                 "props": "build.url=${RUN_DISPLAY_URL};build.user=${USER}"
+    //                             }
+    //                         ]
+    //                     }
+    //                 """
+    //                 server.upload spec: uploadSpec
+    //            }
+    //        }
+    //    }
     }
     post {
         success {
