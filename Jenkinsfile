@@ -1,14 +1,15 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:3.8.8-eclipse-temurin-17-alpine'
-        }
-    }
+    agent none
     triggers {
         githubPush()
     }
     stages {
         stage('Package') {
+            agent {
+                docker {
+                    image 'maven:3.8.8-eclipse-temurin-17-alpine'
+                }
+            }       
             steps {
                 // sh 'git branch -a'
                 // sh 'git show-ref'
@@ -111,6 +112,7 @@ pipeline {
         //     }
         // }
         stage('Dockerhub') {
+            agent any
             steps {
                 script {
                     def pom = readMavenPom file: 'pom.xml'
