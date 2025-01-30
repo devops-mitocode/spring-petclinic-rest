@@ -129,6 +129,7 @@ pipeline {
     }
     post {
         success {
+            // node('') {
             node('built-in') {
                 cleanWs()
             }
