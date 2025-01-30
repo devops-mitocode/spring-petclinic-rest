@@ -129,7 +129,7 @@ pipeline {
     }
     post {
         success {
-            node {
+            node() {
                 cleanWs()
             }
         }
