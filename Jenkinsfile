@@ -129,6 +129,8 @@ pipeline {
                     // Forma 2
                     
                     sh 'docker run --privileged --rm tonistiigi/binfmt --install all'
+                    sh 'docker buildx create --use'
+                    sh 'docker buildx inspect --bootstrap'
 
                     withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                         sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
