@@ -111,21 +111,21 @@ pipeline {
         //         }
         //     }
         // }
-        // stage('Dockerhub') {
-        //     agent any
-        //     steps {
-        //         script {
-        //             def pom = readMavenPom file: 'pom.xml'
+        stage('Dockerhub') {
+            agent any
+            steps {
+                script {
+                    def pom = readMavenPom file: 'pom.xml'
 
-        //             def app = docker.build("danycenas/${pom.artifactId}:${pom.version}")
+                    def app = docker.build("danycenas/${pom.artifactId}:${pom.version}")
 
-        //             docker.withRegistry('https://registry.hub.docker.com/', 'dockerhub-credentials') {
-        //                 app.push()
-        //                 app.push('latest')
-        //             }
-        //         }
-        //     }
-        // }        
+                    docker.withRegistry('https://registry.hub.docker.com/', 'dockerhub-credentials') {
+                        app.push()
+                        app.push('latest')
+                    }
+                }
+            }
+        }        
     }
     post {
         success {
