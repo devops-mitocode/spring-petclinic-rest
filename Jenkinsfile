@@ -117,11 +117,25 @@ pipeline {
                 script {
                     def pom = readMavenPom file: 'pom.xml'
 
-                    def app = docker.build("danycenas/${pom.artifactId}:${pom.version}")
+                    // Forma 1
 
-                    docker.withRegistry('https://registry.hub.docker.com/', 'dockerhub-credentials') {
-                        app.push()
-                        app.push('latest')
+                    // def app = docker.build("danycenas/${pom.artifactId}:${pom.version}")
+
+                    // docker.withRegistry('https://registry.hub.docker.com/', 'dockerhub-credentials') {
+                    //     app.push()
+                    //     app.push('latest')
+                    // }
+
+                    // Forma 2
+                    
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                        sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+                        sh """
+                            docker buildx build \
+                                -t danycenas/${pom.artifactId}:${pom.version} \
+                                -t danycenas/${pom.artifactId}:latest \
+                                --platform linux/amd64,linux/arm64 --push .
+                        """
                     }
                 }
             }
