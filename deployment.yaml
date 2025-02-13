@@ -28,3 +28,8 @@ spec:
           image: danycenas/spring-petclinic-rest:latest
           ports:
             - containerPort: 9966
+          env:
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP            
