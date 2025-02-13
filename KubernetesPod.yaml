@@ -8,7 +8,7 @@ spec:
         - cat
       tty: true
     - name: docker
-      image: docker:27.1.0-cli
+      image: docker:27.5.1-cli
       command:
         - cat
       tty: true
