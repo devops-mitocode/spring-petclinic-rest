@@ -43,7 +43,7 @@ public class SwaggerConfig {
                 .title("REST Petclinic backend Api Documentation").version("1.0")
                 .termsOfService("Petclinic backend terms of service")
                 .description(
-                        "This is REST API documentation of the Spring Petclinic backend. If authentication is enabled, when calling the APIs use admin/admin")
+                        "This is REST API documentation of the Spring Petclinic backend. If authentication is enabled, when calling the APIs use admin/123456")
                 .license(swaggerLicense()).contact(swaggerContact()));
     }
 
