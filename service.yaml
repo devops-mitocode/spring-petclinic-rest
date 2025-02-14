@@ -9,5 +9,5 @@ spec:
     - protocol: "TCP"
       port: 9966       # Puerto interno del servicio
       targetPort: 9966 # Puerto en el contenedor
-      nodePort: 9090   # Puerto específico en el NodePort
+      nodePort: 30000  # Puerto específico en el NodePort
   type: NodePort
