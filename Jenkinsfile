@@ -11,7 +11,7 @@ pipeline {
                 sh 'mvn clean package -DskipTests -B -ntp'
             }
         }        
-        stage('Build & Deploy') {
+        stage('Deploy') {
             agent any
             steps {
                 script {
