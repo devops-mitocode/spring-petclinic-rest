@@ -19,28 +19,6 @@ pipeline {
                 sh 'mvn clean package -DskipTests -B -ntp'
             }
         }
-        // stage('Docker Build and Tag') {
-        //     agent any
-        //     steps {
-        //         script {
-        //             def pom = readMavenPom file: 'pom.xml'
-                    
-        //             sh 'docker run --privileged --rm tonistiigi/binfmt --install all'
-        //             sh 'docker buildx create --use'
-        //             sh 'docker buildx inspect --bootstrap'
-
-        //             withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-        //                 sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
-        //                 sh """
-        //                     docker buildx build \
-        //                         -t danycenas/${pom.artifactId}:${pom.version} \
-        //                         -t danycenas/${pom.artifactId}:latest \
-        //                         --platform linux/amd64,linux/arm64 --push .
-        //                 """
-        //             }
-        //         }
-        //     }
-        // }
         stage('Upload to S3') {
             agent {
                 docker {
