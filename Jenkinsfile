@@ -52,11 +52,7 @@ pipeline {
                 script {
                     def pom = readMavenPom file: 'pom.xml'
                     sh """
-                        aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-                        aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-                        aws configure set default.region $AWS_REGION
-                        
-                        aws s3 cp target/${pom.artifactId}-${pom.version}.jar s3://$S3_BUCKET/${pom.artifactId}-${pom.version}.jar
+                        aws s3 cp target/${pom.artifactId}-${pom.version}.jar s3://$S3_BUCKET/${pom.artifactId}-${pom.version}.jar --region $AWS_REGION
                     """
                 }
             }
@@ -72,17 +68,13 @@ pipeline {
                 script {
                     def pom = readMavenPom file: 'pom.xml'
                     sh """
-                        aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-                        aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-                        aws configure set default.region $AWS_REGION
+                        aws elasticbeanstalk create-application-version --application-name $EB_APP_NAME --version-label ${pom.version} --source-bundle S3Bucket="$S3_BUCKET",S3Key="${pom.artifactId}-${pom.version}.jar" --region $AWS_REGION
                         
-                        aws elasticbeanstalk create-application-version --application-name $EB_APP_NAME --version-label ${pom.version} --source-bundle S3Bucket="$S3_BUCKET",S3Key="${pom.artifactId}-${pom.version}.jar"
-                        
-                        aws elasticbeanstalk update-environment --application-name $EB_APP_NAME --environment-name $EB_ENV_NAME --version-label ${pom.version}
+                        aws elasticbeanstalk update-environment --application-name $EB_APP_NAME --environment-name $EB_ENV_NAME --version-label ${pom.version} --region $AWS_REGION
                     """
                 }
             }
-        }    
+        }
     }
     post {
         success {
