@@ -37,7 +37,8 @@ pipeline {
             steps {
                 script {
                     sh """
-                        aws s3 cp target/deployment/ s3://$S3_BUCKET/deployment/ --recursive --region $AWS_REGION
+                        aws s3 cp target/deployment/${pom.artifactId}-${pom.version}.jar s3://$S3_BUCKET/deployment/ --region $AWS_REGION
+                        aws s3 cp target/deployment/.ebextensions/ s3://$S3_BUCKET/.ebextensions/ --recursive --region $AWS_REGION
                     """
                 }
             }
