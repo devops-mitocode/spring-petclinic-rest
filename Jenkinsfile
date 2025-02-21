@@ -34,6 +34,9 @@ pipeline {
                     args '--entrypoint=""'
                 }
             }
+            options {
+                skipDefaultCheckout()
+            }
             steps {
                 script {
                     def pom = readMavenPom file: 'pom.xml'
@@ -50,6 +53,9 @@ pipeline {
                     image 'amazon/aws-cli:2.24.8'
                     args '--entrypoint=""'
                 }
+            }
+            options {
+                skipDefaultCheckout()
             }
             steps {
                 script {
