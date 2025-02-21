@@ -17,7 +17,7 @@ pipeline {
             }
             steps {
                 sh 'mvn clean package -DskipTests -B -ntp'
-                sh 'zip --version'
+                sh 'unzip --version'
                 script {
                     def pom = readMavenPom file: 'pom.xml'
                     sh """
