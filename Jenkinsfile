@@ -17,6 +17,7 @@ pipeline {
             }
             steps {
                 sh 'mvn clean package -DskipTests -B -ntp'
+                sh 'unzip --version'
             }
         }
         stage('Upload to S3') {
