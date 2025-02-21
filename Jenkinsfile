@@ -42,7 +42,7 @@ pipeline {
                 script {
                     def pom = readMavenPom file: 'pom.xml'
                     sh """
-                        aws s3 cp target/deployment/${pom.artifactId}-${pom.version}.jar s3://$S3_BUCKET/deployment/ --region $AWS_REGION
+                        aws s3 cp target/deployment/${pom.artifactId}-${pom.version}.jar s3://$S3_BUCKET/ --region $AWS_REGION
                         aws s3 cp target/deployment/.ebextensions/ s3://$S3_BUCKET/.ebextensions/ --recursive --region $AWS_REGION
                         aws s3 cp target/deployment/.platform/ s3://$S3_BUCKET/.platform/ --recursive --region $AWS_REGION
                     """
@@ -63,7 +63,7 @@ pipeline {
                 script {
                     def pom = readMavenPom file: 'pom.xml'
                     sh """
-                        aws elasticbeanstalk create-application-version --application-name $EB_APP_NAME --version-label ${pom.version} --source-bundle S3Bucket="$S3_BUCKET",S3Key="deployment/${pom.artifactId}-${pom.version}.jar" --region $AWS_REGION
+                        aws elasticbeanstalk create-application-version --application-name $EB_APP_NAME --version-label ${pom.version} --source-bundle S3Bucket="$S3_BUCKET",S3Key="${pom.artifactId}-${pom.version}.jar" --region $AWS_REGION
                         
                         aws elasticbeanstalk update-environment --application-name $EB_APP_NAME --environment-name $EB_ENV_NAME --version-label ${pom.version} --region $AWS_REGION
                     """
