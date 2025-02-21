@@ -23,6 +23,7 @@ pipeline {
                         mkdir -p target/deployment
                         cp target/${pom.artifactId}-${pom.version}.jar target/deployment/
                         cp -r .ebextensions target/deployment/
+                        cp -r .platform target/deployment/
                     """
                 }
             }
@@ -43,6 +44,7 @@ pipeline {
                     sh """
                         aws s3 cp target/deployment/${pom.artifactId}-${pom.version}.jar s3://$S3_BUCKET/deployment/ --region $AWS_REGION
                         aws s3 cp target/deployment/.ebextensions/ s3://$S3_BUCKET/.ebextensions/ --recursive --region $AWS_REGION
+                        aws s3 cp target/deployment/.platform/ s3://$S3_BUCKET/.platform/ --recursive --region $AWS_REGION
                     """
                 }
             }
