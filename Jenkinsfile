@@ -2,8 +2,8 @@ pipeline {
     agent none
     environment {
         S3_BUCKET = 'elasticbeanstalk-us-west-2-231784247281'
-        EB_APP_NAME = 'petclinic'
-        EB_ENV_NAME = 'Petclinic-env'
+        EB_APP_NAME = 'petclinic1'
+        EB_ENV_NAME = 'Petclinic1-env'
         AWS_REGION = 'us-west-2'
         AWS_ACCESS_KEY_ID = credentials('aws-access-key-id')
         AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
