@@ -35,7 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@CrossOrigin(exposedHeaders = "errors, content-type")
+// @CrossOrigin(exposedHeaders = "errors, content-type")
+@CrossOrigin(origins = "*") 
 @RequestMapping("api")
 public class PetTypeRestController implements PettypesApi {
 

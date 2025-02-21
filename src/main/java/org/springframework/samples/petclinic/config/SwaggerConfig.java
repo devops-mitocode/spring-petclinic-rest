@@ -40,7 +40,7 @@ public class SwaggerConfig {
     OpenAPI customOpenAPI() {
 
         return new OpenAPI().components(new Components()).info(new Info()
-                .title("REST Petclinic backend Api Documentation").version("3.4.2")
+                .title("REST Petclinic backend Api Documentation").version("3.4.3")
                 .termsOfService("Petclinic backend terms of service")
                 .description(
                         "This is REST API documentation of the Spring Petclinic backend. If authentication is enabled, when calling the APIs use admin/admin")
