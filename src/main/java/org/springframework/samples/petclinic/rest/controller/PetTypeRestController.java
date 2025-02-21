@@ -36,7 +36,7 @@ import java.util.List;
 
 @RestController
 // @CrossOrigin(exposedHeaders = "errors, content-type")
-@CrossOrigin(origins = "*") 
+@CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS})
 @RequestMapping("api")
 public class PetTypeRestController implements PettypesApi {
 
