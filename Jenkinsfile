@@ -12,7 +12,7 @@ pipeline {
         stage('Build and Package') {
             agent {
                 docker {
-                    image 'maven:3.8.8-eclipse-temurin-17'
+                    image 'maven:3.8.8-eclipse-temurin-17-alpine'
                 }
             }
             steps {
