@@ -16,6 +16,7 @@ pipeline {
                 }
             }
             steps {
+                sh 'tar --version'
                 sh 'mvn clean package -DskipTests -B -ntp'
                 script {
                     def pom = readMavenPom file: 'pom.xml'
