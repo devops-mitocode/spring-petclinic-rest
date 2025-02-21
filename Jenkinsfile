@@ -24,7 +24,7 @@ pipeline {
                         cp target/${pom.artifactId}-${pom.version}.jar target/deployment/
                         cp -r .ebextensions target/deployment/
                         cd target/deployment
-                        zip -r ${pom.artifactId}-${pom.version}.zip ./*
+                        unzip -r ${pom.artifactId}-${pom.version}.zip ./*
                     """
                 }
             }
