@@ -16,11 +16,11 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh 'mvn testt -B -ntp'
+                sh 'mvn test -B -ntp'
             }
             post { 
                 success { 
-                    echo 'Tests passed!'
+                    junit 'target/surefire-reports/*.xml'
                 }
                 failure { 
                     echo 'Tests failed!'
