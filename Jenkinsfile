@@ -26,8 +26,9 @@ pipeline {
         }                
     }
     post { 
-        always { 
-            echo 'always'
+        success { 
+            archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+            cleanWs()
         }
     }    
 }
