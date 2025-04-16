@@ -16,8 +16,16 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh 'mvn test -B -ntp'
+                sh 'mvn testt -B -ntp'
             }
+            post { 
+                success { 
+                    echo 'Tests passed!'
+                }
+                failure { 
+                    echo 'Tests failed!'
+                }
+            }  
         }
         stage('Package') {
             steps {
