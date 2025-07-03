@@ -47,7 +47,7 @@ pipeline {
         }
         stage('Package') {
             steps {
-                sh 'mvn clean package -DskipTests -Dstyle.color=always -B -ntp'
+                sh 'mvn package -DskipTests -Dstyle.color=always -B -ntp'
             }
             post {
                 success {
