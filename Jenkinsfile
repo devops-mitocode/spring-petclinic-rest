@@ -24,7 +24,7 @@ pipeline {
 //        }
         stage('Unit Tests') {
             steps {
-                sh 'mvn clean test -Dstyle.color=always -Dtest=MascotaService05JUnitMockitoCoverageTest -Dmaven.test.failure.ignore=true -B -ntp'
+                sh 'mvn clean test -Dstyle.color=always -Dmaven.test.failure.ignore=true -B -ntp'
             }
             post {
                 always {
