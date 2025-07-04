@@ -59,7 +59,10 @@ pipeline {
             steps {
                 withSonarQubeEnv('sonarqube') {
                     sh 'env | sort'
-                    sh 'mvn sonar:sonar -Dstyle.color=always -B -ntp'
+                    script {
+                        def branchName = GIT_BRANCH.replaceFirst('origin/', '')
+                        sh "mvn sonar:sonar -Dsonar.branch.name=${branchName} -Dstyle.color=always -B -ntp"
+                    }
                 }
             }
         }
