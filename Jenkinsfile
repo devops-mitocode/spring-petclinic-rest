@@ -47,7 +47,7 @@ pipeline {
         }
         stage('Package') {
             steps {
-                sh 'mvn clean package -DskipTests -Dstyle.color=always -B -ntp'
+                sh 'mvn package -DskipTests -Dstyle.color=always -B -ntp'
             }
             post {
                 success {
@@ -55,6 +55,14 @@ pipeline {
                 }
             }
         }
+        stage('Sonarqube Analysis') {
+            steps {
+                withSonarQubeEnv('sonarqube') {
+                    sh 'env | sort'
+                    sh 'mvn sonar:sonar -Dstyle.color=always -B -ntp'
+                }
+            }
+        }        
     }
     post {
         always {
