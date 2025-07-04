@@ -24,6 +24,7 @@ pipeline {
 //        }
         stage('Unit Tests') {
             steps {
+                sh 'env | sort'
                 sh 'mvn clean test -Dstyle.color=always -Dmaven.test.failure.ignore=true -B -ntp'
             }
             post {
@@ -58,7 +59,6 @@ pipeline {
         stage('Sonarqube Analysis') {
             steps {
                 withSonarQubeEnv('sonarqube') {
-                    sh 'env | sort'
                     script {
                         def branchName = GIT_BRANCH.replaceFirst('origin/', '')
                         sh "mvn sonar:sonar -Dsonar.branch.name=${branchName} -Dstyle.color=always -B -ntp"
