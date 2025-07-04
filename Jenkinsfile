@@ -54,12 +54,7 @@ pipeline {
                     archiveArtifacts artifacts: 'target/*.jar'
                 }
             }
-        }
-        stage('Sonarqube Api') {
-            steps {
-                sh 'curl -X POST -u admin:admin -d "projectKey=pruebas-unitarias" http://localhost:9000/api/projects/create'
-            }
-        }         
+        }  
         stage('Sonarqube Analysis') {
             steps {
                 withSonarQubeEnv('sonarqube') {
