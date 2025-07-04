@@ -55,6 +55,11 @@ pipeline {
                 }
             }
         }
+        stage('Sonarqube Api') {
+            steps {
+                sh 'curl -X POST -u admin:admin -d "projectKey=pruebas-unitarias" http://localhost:9000/api/projects/create'
+            }
+        }         
         stage('Sonarqube Analysis') {
             steps {
                 withSonarQubeEnv('sonarqube') {
@@ -62,7 +67,14 @@ pipeline {
                     sh 'mvn sonar:sonar -Dstyle.color=always -B -ntp'
                 }
             }
-        }        
+        }
+        stage('SonarQube Quality Gate') {
+            steps {
+                timeout(time: 1, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
     }
     post {
         always {
