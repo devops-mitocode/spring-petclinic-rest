@@ -17,6 +17,9 @@ pipeline {
         }  
         stage('Deploy') {
             agent any
+            options {
+                skipDefaultCheckout()
+            }
             steps {
                 sh """
                     fuser -k 9966/tcp 2>/dev/null || true
@@ -30,6 +33,9 @@ pipeline {
         }
         stage('Prepare Integration Tests') {
             agent any
+            options {
+                skipDefaultCheckout()
+            }
             steps {
                 dir('integration-tests') {
                     git branch: 'master', url: 'https://github.com/devops-mitocode/integration-tests-post-deploy.git'
@@ -43,6 +49,10 @@ pipeline {
         //     }
         // }
         stage('Execute Integration Tests with Docker') {
+            agent any
+            options {
+                skipDefaultCheckout()
+            }            
             steps {
                 script {
                     def tagsOption = TAGS?.trim() ? "-Dcucumber.filter.tags='${TAGS}'" : ""
