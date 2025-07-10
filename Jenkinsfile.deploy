@@ -22,10 +22,10 @@ pipeline {
 
                     fuser -k 9966/tcp 2>/dev/null || true
                     JAR_FILE=\$(find target -name "*.jar" -type f | head -1)
-                    nohup java -jar \$JAR_FILE --server.port=9966 --debug >/dev/null 2>&1 &
+                    nohup java -jar \$JAR_FILE --server.port=9966 >/dev/null 2>&1 &
                     echo \$! > /tmp/app.pid
                     sleep 20
-                    curl -f http://localhost:9966/petclinic && echo "Deploy exitoso"
+                    curl -i -v http://localhost:9966/petclinic/api/pettypes && echo "Deploy exitoso"
                 """
             }
         }
