@@ -18,6 +18,7 @@ pipeline {
             steps {
                 sh """
                     cat /etc/os-release
+                    env | sort
 
                     fuser -k 9966/tcp 2>/dev/null || true
                     JAR_FILE=\$(find target -name "*.jar" -type f | head -1)
