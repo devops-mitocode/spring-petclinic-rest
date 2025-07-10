@@ -17,11 +17,12 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh """
-                    lsof -ti:${APP_PORT} | xargs kill -9 2>/dev/null || true
-                    nohup java -jar target/${JAR_FILE} --server.port=${APP_PORT} >/dev/null 2>&1 &
-                    echo \$! > ${PID_FILE}
+                    lsof -ti:9966 | xargs kill -9 2>/dev/null || true
+                    JAR_FILE=\$(find target -name "*.jar" -type f | head -1)
+                    nohup java -jar \$JAR_FILE --server.port=9966 >/dev/null 2>&1 &
+                    echo \$! > /tmp/app.pid
                     sleep 10
-                    curl -f ${HEALTH_CHECK_URL} && echo "Deploy exitoso"
+                    curl -f http://localhost:9966/ && echo "Deploy exitoso"
                 """
             }
         }
