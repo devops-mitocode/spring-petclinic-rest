@@ -31,12 +31,11 @@ pipeline {
         }
         stage('Integration Tests Post') {
             steps {
-                echo 'Integration Tests Post'
                 dir('integration-tests') {
                     git branch: 'master', url: 'https://github.com/devops-mitocode/integration-tests-post-deploy.git'
-                    sh 'ls -la'
                     sh 'cat pom.xml'
                 }
+                sh 'ls -la'
             }
         }
     }
