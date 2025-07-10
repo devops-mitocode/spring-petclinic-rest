@@ -9,7 +9,7 @@ pipeline {
         ansiColor('xterm')
     }
     stages {
-        stage('Package') {
+        stage('Build') {
             steps {
                 sh 'mvn clean package -DskipTests -Dstyle.color=always -B -ntp'
             }
@@ -17,9 +17,6 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh """
-                    cat /etc/os-release
-                    env | sort
-
                     fuser -k 9966/tcp 2>/dev/null || true
                     JAR_FILE=\$(find target -name "*.jar" -type f | head -1)
                     nohup java -jar \$JAR_FILE --server.port=9966 >/dev/null 2>&1 &
@@ -29,13 +26,16 @@ pipeline {
                 """
             }
         }
-        stage('Integration Tests Post') {
+        stage('Prepare Integration Tests') {
             steps {
                 dir('integration-tests') {
                     git branch: 'master', url: 'https://github.com/devops-mitocode/integration-tests-post-deploy.git'
-                    sh 'cat pom.xml'
                 }
-                sh 'ls -la'
+            }
+        }
+        stage('Execute Integration Tests') {
+            steps {
+                sh 'mvn clean verify -Dstyle.color=always -f integration-tests/pom.xml -B -ntp'
             }
         }
     }
