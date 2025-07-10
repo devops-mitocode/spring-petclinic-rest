@@ -11,12 +11,14 @@ pipeline {
     stages {
         stage('Package') {
             steps {
-                sh 'mvn package -DskipTests -Dstyle.color=always -B -ntp'
+                sh 'mvn clean package -DskipTests -Dstyle.color=always -B -ntp'
             }
         }  
         stage('Deploy') {
             steps {
                 sh """
+                    cat /etc/os-release
+
                     lsof -ti:9966 | xargs kill -9 2>/dev/null || true
                     JAR_FILE=\$(find target -name "*.jar" -type f | head -1)
                     nohup java -jar \$JAR_FILE --server.port=9966 >/dev/null 2>&1 &
