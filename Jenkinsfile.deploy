@@ -1,76 +1,35 @@
 pipeline {
-//    agent any
     agent {
         docker {
             image 'maven:3.9.10-eclipse-temurin-17'
         }
     }
-//    tools{
-//        maven 'maven3.9.10'
-//    }
     options {
         timeout(time: 10, unit: 'MINUTES')
         ansiColor('xterm')
     }
-    triggers {
-        githubPush()
-        cron('H/30 * * * *')
-    }
     stages {
-//        stage('Checkout SCM') {
-//            steps {
-//                git branch: 'master', url: 'https://github.com/devops-mitocode/pruebas-unitarias.git'
-//            }
-//        }
-        stage('Unit Tests') {
-            steps {
-                sh 'env | sort'
-                sh 'mvn clean test -Dstyle.color=always -Dmaven.test.failure.ignore=true -B -ntp'
-            }
-            post {
-                always {
-                    junit 'target/surefire-reports/*.xml'
-                }
-            }
-        }
-        stage('Code Coverage') {
-            steps {
-                sh 'mvn jacoco:report -Dstyle.color=always -B -ntp'
-            }
-            post {
-                always {
-                    recordCoverage(
-                            tools: [[parser: 'JACOCO']],
-                            sourceCodeRetention: 'EVERY_BUILD'
-                    )
-                }
-            }
-        }
         stage('Package') {
             steps {
                 sh 'mvn package -DskipTests -Dstyle.color=always -B -ntp'
             }
-            post {
-                success {
-                    archiveArtifacts artifacts: 'target/*.jar'
-                }
-            }
         }  
-        stage('Sonarqube Analysis') {
+        stage('Deploy') {
             steps {
-                withSonarQubeEnv('sonarqube') {
-                    script {
-                        def branchName = GIT_BRANCH.replaceFirst('origin/', '')
-                        sh "mvn sonar:sonar -Dsonar.branch.name=${branchName} -Dstyle.color=always -B -ntp"
-                    }
-                }
+                sh """
+                    lsof -ti:${APP_PORT} | xargs kill -9 2>/dev/null || true
+                    nohup java -jar target/${JAR_FILE} --server.port=${APP_PORT} >/dev/null 2>&1 &
+                    echo \$! > ${PID_FILE}
+                    sleep 10
+                    curl -f ${HEALTH_CHECK_URL} && echo "Deploy exitoso"
+                """
             }
         }
-        stage('SonarQube Quality Gate') {
+        stage('Integration Tests Post') {
             steps {
-                timeout(time: 1, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
+                echo 'Integration Tests Post'
+                git branch: 'master', url: 'https://github.com/devops-mitocode/integration-tests-post-deploy.git'
+                sh 'ls -la'
             }
         }
     }
