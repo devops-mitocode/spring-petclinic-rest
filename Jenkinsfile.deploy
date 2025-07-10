@@ -25,7 +25,7 @@ pipeline {
                     nohup java -jar \$JAR_FILE --server.port=9966 >/dev/null 2>&1 &
                     echo \$! > /tmp/app.pid
                     sleep 20
-                    curl -i -v http://localhost:9966/petclinic/api/pettypes && echo "Deploy exitoso"
+                    curl -i http://localhost:9966/petclinic/api/pettypes
                 """
             }
         }
