@@ -34,6 +34,7 @@ pipeline {
                 echo 'Integration Tests Post'
                 git branch: 'master', url: 'https://github.com/devops-mitocode/integration-tests-post-deploy.git'
                 sh 'ls -la'
+                sh 'cat pom.xml'
             }
         }
     }
