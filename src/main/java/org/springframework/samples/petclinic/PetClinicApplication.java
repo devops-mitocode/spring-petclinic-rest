@@ -17,5 +17,8 @@ public class PetClinicApplication extends SpringBootServletInitializer {
 		// For example, you could set up a database connection or load initial data
 		// Database connection setup code can go here
 		// You could use a DataSource bean to configure the database connection
+
+		// Additional database initialization code can go here
+		
 	}
 }
