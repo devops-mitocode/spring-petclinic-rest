@@ -20,6 +20,6 @@ public class PetClinicApplication extends SpringBootServletInitializer {
 
 		// Additional database initialization code can go here
 		// For example, you could create initial database schemas or load data
-		
+		// Database initialization code can go here
 	}
 }
