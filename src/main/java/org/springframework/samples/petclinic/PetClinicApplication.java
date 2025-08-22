@@ -11,5 +11,7 @@ public class PetClinicApplication extends SpringBootServletInitializer {
 		SpringApplication.run(PetClinicApplication.class, args);
 		// Additional initialization code can go here
 		// For example, you could set up logging or perform initial data loading
+		// This is a good place to add any custom startup logic
+		// Custom startup logic can be added here
 	}
 }
