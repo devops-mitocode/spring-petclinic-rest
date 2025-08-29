@@ -16,12 +16,12 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh 'mvn test -B -ntp'
+                sh 'mvn test -Dmaven.compiler.skip=true -B -ntp'
             }
         }
         stage('Package') {
             steps {
-                sh 'mvn package -DskipTests -B -ntp'
+                sh 'mvn package -Dmaven.compiler.skip=true -DskipTests -B -ntp'
             }
         }                
     }
