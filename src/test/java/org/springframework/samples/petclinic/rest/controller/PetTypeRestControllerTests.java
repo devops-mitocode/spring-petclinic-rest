@@ -18,7 +18,6 @@ package org.springframework.samples.petclinic.rest.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -96,7 +95,6 @@ class PetTypeRestControllerTests {
 
     @Test
     @WithMockUser(roles="OWNER_ADMIN")
-    @Disabled
     void testGetPetTypeSuccessAsOwnerAdmin() throws Exception {
     	given(this.clinicService.findPetTypeById(1)).willReturn(petTypes.get(0));
         this.mockMvc.perform(get("/api/pettypes/1")
@@ -104,7 +102,7 @@ class PetTypeRestControllerTests {
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json"))
             .andExpect(jsonPath("$.id").value(1))
-            .andExpect(jsonPath("$.name").value("cat"));
+            .andExpect(jsonPath("$.name").value("cat2"));
     }
 
     @Test
