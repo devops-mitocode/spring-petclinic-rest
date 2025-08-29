@@ -28,7 +28,7 @@ pipeline {
             steps {
                 sh 'mvn package -Dmaven.compiler.skip=true -DskipTests -B -ntp'
             }
-        }                
+        }
     }
     post {
         success {
