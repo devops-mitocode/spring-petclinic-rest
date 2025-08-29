@@ -21,12 +21,13 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh 'mvn test -Dmaven.compiler.skip=true -B -ntp'
+                sh 'mvn test -B -ntp'
+                junit 'target/surefire-reports/*.xml'
             }
         }
         stage('Package') {
             steps {
-                sh 'mvn package -Dmaven.compiler.skip=true -DskipTests -B -ntp'
+                sh 'mvn package -DskipTests -B -ntp'
             }
         }
     }
