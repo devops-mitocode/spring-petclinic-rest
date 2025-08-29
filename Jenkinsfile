@@ -25,7 +25,7 @@ pipeline {
                 // junit 'target/surefire-reports/*.xml'
 
                 sh 'mvn test -Dmaven.test.failure.ignore=true -B -ntp'
-                junit testResults: 'target/surefire-reports/*.xml', skipMarkingBuildUnstable: true
+                junit testResults: 'target/surefire-reports/*.xml', skipMarkingBuildUnstable: false
             }
         }
         stage('Package') {
