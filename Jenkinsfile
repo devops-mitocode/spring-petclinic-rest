@@ -62,7 +62,14 @@ pipeline {
                     sh 'mvn sonar:sonar -B -ntp'
                 }
             }
-        }        
+        }
+        stage("Quality Gate"){
+            steps{
+                timeout(time: 1, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
     }
     post {
         success {
