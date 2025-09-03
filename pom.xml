@@ -317,7 +317,7 @@
                     <execution>
                         <id>report</id>
                         <goals>
-                            <goal>report</goal>
+                            <goal>test</goal>
                         </goals>
                         <configuration>
                             <formats>
