@@ -95,6 +95,9 @@ pipeline {
             steps {
                 script{
                     // Forma 1
+
+                    env.MAVEN_HOME = '/usr/share/maven'
+
                     def releases = 'spring-petclinic-rest-release'
                     def snapshots = 'spring-petclinic-rest-snapshot'
 
