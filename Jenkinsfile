@@ -94,7 +94,7 @@ pipeline {
         stage('Artifactory') {
             steps {
                 script{
-                    // Forma 1
+                    // Forma 1: rtMaven
 
                     env.MAVEN_HOME = '/usr/share/maven'
 
