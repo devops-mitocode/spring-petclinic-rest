@@ -12,7 +12,8 @@ pipeline {
             }
         }
         stage('Build Docker Image') {
-            agent any           
+            agent any
+            options { skipDefaultCheckout() }
             steps {
                 sh 'docker --version'
             }
