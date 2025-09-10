@@ -151,6 +151,26 @@ pipeline {
                     artifactId: "${pom.artifactId}",
                     packaging: "${pom.packaging}",
                     version: "${pom.version}-${BUILD_NUMBER}"]]]
+
+                    // nexus with curl -- revisar docs
+                    sh """
+                       curl -X POST -u ${NEXUS_USERNAME}:${NEXUS_PASSWORD} \
+                       -H "Content-Type: application/json" \
+                       -d '{
+                           "mavenCoordinate": {
+                               "groupId": "${pom.groupId}",
+                               "artifactId": "${pom.artifactId}",
+                               "version": "${pom.version}-${BUILD_NUMBER}",
+                               "packaging": "${pom.packaging}"
+                           },
+                           "files": [
+                               {
+                                   "path": "target/${pom.artifactId}-${pom.version}.${pom.packaging}"
+                               }
+                           ]
+                       }' \
+                       http://nexus:8081/service/rest/v1/components?repository=spring-petclinic-rest-release
+                    """
                 }
             }
         }        
