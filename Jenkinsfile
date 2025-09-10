@@ -91,51 +91,69 @@ pipeline {
         //         }
         //     }
         // }
-        stage('Artifactory') {
+        // stage('Artifactory') {
+        //     steps {
+        //         script{
+        //             // Forma 1: rtMaven
+
+        //             // env.MAVEN_HOME = '/usr/share/maven'
+
+        //             // def releases = 'spring-petclinic-rest-release'
+        //             // def snapshots = 'spring-petclinic-rest-snapshot'
+
+        //             // def server = Artifactory.server 'artifactory'
+        //             // def rtMaven = Artifactory.newMavenBuild()
+
+        //             // rtMaven.deployer server: server, releaseRepo: releases, snapshotRepo: snapshots
+        //             // def buildInfo = rtMaven.run pom: 'pom.xml', goals: 'clean install -B -ntp -DskipTests'
+
+        //             // server.publishBuildInfo buildInfo
+
+
+        //             // Forma 2 - File Spec
+        //             def server = Artifactory.server 'artifactory'
+        //             def targetRepo = 'spring-petclinic-rest-release'
+
+        //             def pom = readMavenPom file: 'pom.xml'
+        //             println pom.groupId
+        //             def groupIdPath = pom.groupId.replaceAll("\\.", "/")
+        //             println groupIdPath
+
+        //             def uploadSpec = """
+        //                 {
+        //                     "files": [
+        //                         {
+        //                             "pattern": "target/.*.jar",
+        //                             "target": "${targetRepo}/${groupIdPath}/${pom.artifactId}/${pom.version}/",
+        //                             "regexp": "true",
+        //                             "props": "build.url=${RUN_DISPLAY_URL};build.user=${USER}"
+        //                         }
+        //                     ]
+        //                 }
+        //             """
+        //             server.upload spec: uploadSpec
+
+        //         }
+        //     }
+        // }
+        stage('Nexus') {
             steps {
                 script{
-                    // Forma 1: rtMaven
-
-                    // env.MAVEN_HOME = '/usr/share/maven'
-
-                    // def releases = 'spring-petclinic-rest-release'
-                    // def snapshots = 'spring-petclinic-rest-snapshot'
-
-                    // def server = Artifactory.server 'artifactory'
-                    // def rtMaven = Artifactory.newMavenBuild()
-
-                    // rtMaven.deployer server: server, releaseRepo: releases, snapshotRepo: snapshots
-                    // def buildInfo = rtMaven.run pom: 'pom.xml', goals: 'clean install -B -ntp -DskipTests'
-
-                    // server.publishBuildInfo buildInfo
-
-
-                    // Forma 2 - File Spec
-                    def server = Artifactory.server 'artifactory'
-                    def targetRepo = 'spring-petclinic-rest-release'
-
                     def pom = readMavenPom file: 'pom.xml'
-                    println pom.groupId
-                    def groupIdPath = pom.groupId.replaceAll("\\.", "/")
-                    println groupIdPath
+                    println pom
 
-                    def uploadSpec = """
-                        {
-                            "files": [
-                                {
-                                    "pattern": "target/.*.jar",
-                                    "target": "${targetRepo}/${groupIdPath}/${pom.artifactId}/${pom.version}/",
-                                    "regexp": "true",
-                                    "props": "build.url=${RUN_DISPLAY_URL};build.user=${USER}"
-                                }
-                            ]
-                        }
-                    """
-                    server.upload spec: uploadSpec
-
+                    nexusPublisher nexusInstanceId: 'nexus',
+                    nexusRepositoryId: 'spring-petclinic-rest-releases',
+                    packages: [[$class: 'MavenPackage',
+                    mavenAssetList: [[classifier: '', extension: '', filePath: "target/${pom.artifactId}-${pom.version}.${pom.packaging}"]],
+                    mavenCoordinate: [
+                    groupId: "${pom.groupId}",
+                    artifactId: "${pom.artifactId}",
+                    packaging: "${pom.packaging}",
+                    version: "${pom.version}-${BUILD_NUMBER}"]]]
                 }
             }
-        }
+        }        
     }
     post {
         success {
