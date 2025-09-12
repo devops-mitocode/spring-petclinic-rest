@@ -21,7 +21,12 @@ properties([
                         import jenkins.model.*
                         import groovy.json.JsonSlurper
 
+                        def cred = CredentialsMatchers.firstOrNull(
+                            CredentialsProvider.lookupCredentials(com.cloudbees.plugins.credentials.common.StringCredentials.class, Jenkins.instance, null, null),
+                            CredentialsMatchers.withId('artifactory-token')
+                        )
 
+                        println "abc ${cred}"
 
                         def url = 'http://34.210.78.163:8081/artifactory/api/storage/spring-petclinic-rest-snapshot/org/springframework/samples/spring-petclinic-rest'
                         def http_client = new URL(url).openConnection() as HttpURLConnection
