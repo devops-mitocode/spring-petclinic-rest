@@ -21,6 +21,7 @@ properties([
                         import jenkins.model.*
                         import groovy.json.JsonSlurper
 
+                        println "abc ${AUTH_HEADER}"
                         println "${AUTH_HEADER}"
 
                         def url = 'http://34.210.78.163:8081/artifactory/api/storage/spring-petclinic-rest-snapshot/org/springframework/samples/spring-petclinic-rest'
