@@ -24,7 +24,8 @@ properties([
                         import com.cloudbees.plugins.credentials.CredentialsProvider
                         import com.cloudbees.plugins.credentials.CredentialsMatchers
                         import com.cloudbees.plugins.credentials.domains.DomainRequirement
-                        import com.cloudbees.plugins.credentials.common.StringCredentials
+                        // import com.cloudbees.plugins.credentials.common.StringCredentials
+                        import org.jenkinsci.plugins.plaincredentials.StringCredentials
 
 
                         // def cred = CredentialsMatchers.firstOrNull(
