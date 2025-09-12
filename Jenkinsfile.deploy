@@ -62,7 +62,7 @@ properties([
                     }
                 '''
             ],
-            fallbackScript: [classpath: [], sandbox: false, script: ''' return ["No versions available"] ''']
+            fallbackScript: [classpath: [], sandbox: true, script: ''' return ["No versions available"] ''']
          ]
         ]
     ])
