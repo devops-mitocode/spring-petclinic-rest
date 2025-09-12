@@ -49,7 +49,7 @@ pipeline {
         ARTIFACTORY_URL = 'http://34.210.78.163:8081/artifactory'
         REPO = 'spring-petclinic-rest-snapshot'
         RELEASE_REPO = 'spring-petclinic-rest-release'
-        AUTH_HEADER = 'Authorization: Basic YWRtaW46SG9sYW11bmRvMjAyMUA='
+        AUTH_HEADER = 'Authorization: Bearer AKCpBvWUePYKt6SyKZZtuWkWxV7hfiiSyLpx3xetPih9jLAEPbkwHGFRzYTHVoKiiXj3azqyo'
     }
     options {
         skipDefaultCheckout()
@@ -66,7 +66,7 @@ pipeline {
                     echo ARTIFACTORY_URL: $ARTIFACTORY_URL
                     echo version ${params.version}
 
-                    curl --location '${ARTIFACTORY_URL}/${REPO}/org/springframework/samples/spring-petclinic-rest/${params.version}/spring-petclinic-rest-${params.version}.jar' \\
+                    curl -I --location '${ARTIFACTORY_URL}/${REPO}/org/springframework/samples/spring-petclinic-rest/${params.version}/spring-petclinic-rest-${params.version}.jar' \\
                          --header '${AUTH_HEADER}' \\
                          --output spring-petclinic-rest-${params.version}.jar
                          
