@@ -136,44 +136,72 @@ pipeline {
         //         }
         //     }
         // }
-        stage('Nexus') {
+        // stage('Nexus') {
+        //     steps {
+        //         script{
+        //             def pom = readMavenPom file: 'pom.xml'
+        //             println pom
+
+        //             nexusPublisher nexusInstanceId: 'nexus',
+        //             nexusRepositoryId: 'spring-petclinic-rest-release',
+        //             packages: [[$class: 'MavenPackage',
+        //             mavenAssetList: [[classifier: '', extension: '', filePath: "target/${pom.artifactId}-${pom.version}.${pom.packaging}"]],
+        //             mavenCoordinate: [
+        //             groupId: "${pom.groupId}",
+        //             artifactId: "${pom.artifactId}",
+        //             packaging: "${pom.packaging}",
+        //             version: "${pom.version}-${BUILD_NUMBER}"]]]
+
+        //             // nexus with curl -- revisar docs
+        //             sh """
+        //                curl -X POST -u ${NEXUS_USERNAME}:${NEXUS_PASSWORD} \
+        //                -H "Content-Type: application/json" \
+        //                -d '{
+        //                    "mavenCoordinate": {
+        //                        "groupId": "${pom.groupId}",
+        //                        "artifactId": "${pom.artifactId}",
+        //                        "version": "${pom.version}-${BUILD_NUMBER}",
+        //                        "packaging": "${pom.packaging}"
+        //                    },
+        //                    "files": [
+        //                        {
+        //                            "path": "target/${pom.artifactId}-${pom.version}.${pom.packaging}"
+        //                        }
+        //                    ]
+        //                }' \
+        //                http://nexus:8081/service/rest/v1/components?repository=spring-petclinic-rest-release
+        //             """
+        //         }
+        //     }
+        // }
+        stage('Artifactory') {
             steps {
                 script{
+                    // Forma 2 - File Spec
+                    def server = Artifactory.server 'artifactory'
+                    def targetRepo = 'spring-petclinic-rest-snapshot'
+
                     def pom = readMavenPom file: 'pom.xml'
-                    println pom
+                    println pom.groupId
+                    def groupIdPath = pom.groupId.replaceAll("\\.", "/")
+                    println groupIdPath
 
-                    nexusPublisher nexusInstanceId: 'nexus',
-                    nexusRepositoryId: 'spring-petclinic-rest-release',
-                    packages: [[$class: 'MavenPackage',
-                    mavenAssetList: [[classifier: '', extension: '', filePath: "target/${pom.artifactId}-${pom.version}.${pom.packaging}"]],
-                    mavenCoordinate: [
-                    groupId: "${pom.groupId}",
-                    artifactId: "${pom.artifactId}",
-                    packaging: "${pom.packaging}",
-                    version: "${pom.version}-${BUILD_NUMBER}"]]]
-
-                    // nexus with curl -- revisar docs
-                    sh """
-                       curl -X POST -u ${NEXUS_USERNAME}:${NEXUS_PASSWORD} \
-                       -H "Content-Type: application/json" \
-                       -d '{
-                           "mavenCoordinate": {
-                               "groupId": "${pom.groupId}",
-                               "artifactId": "${pom.artifactId}",
-                               "version": "${pom.version}-${BUILD_NUMBER}",
-                               "packaging": "${pom.packaging}"
-                           },
-                           "files": [
-                               {
-                                   "path": "target/${pom.artifactId}-${pom.version}.${pom.packaging}"
-                               }
-                           ]
-                       }' \
-                       http://nexus:8081/service/rest/v1/components?repository=spring-petclinic-rest-release
+                    def uploadSpec = """
+                        {
+                            "files": [
+                                {
+                                    "pattern": "target/.*.jar",
+                                    "target": "${targetRepo}/${groupIdPath}/${pom.artifactId}/${pom.version}/",
+                                    "regexp": "true",
+                                    "props": "build.url=${RUN_DISPLAY_URL};build.user=${USER}"
+                                }
+                            ]
+                        }
                     """
+                    server.upload spec: uploadSpec
                 }
             }
-        }        
+        }                
     }
     post {
         success {
