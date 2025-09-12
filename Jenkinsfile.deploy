@@ -33,22 +33,18 @@ properties([
                         CredentialsProvider.lookupCredentials(PasswordCredentials.class, Jenkins.instance, null, null),
                         CredentialsMatchers.withId('artifactory-token')
                     )
-
-                    // println "abc ${cred}"
-
+                    def token = cred.password.plainText
 
                     // def cred = CredentialsMatchers.firstOrNull(
                     //     CredentialsProvider.lookupCredentials(StringCredentials.class, Jenkins.instance, null, null),
                     //     CredentialsMatchers.withId('artifactory-token')
                     // )
 
-                    // println "abc ${cred}"
-
                     def url = 'http://34.210.78.163:8081/artifactory/api/storage/spring-petclinic-rest-snapshot/org/springframework/samples/spring-petclinic-rest'
                     def http_client = new URL(url).openConnection() as HttpURLConnection
                     // http_client.setRequestProperty("Authorization", "Basic YWRtaW46TWl0b0NvZGUyMDI1")
                     // http_client.setRequestProperty("Authorization", "Bearer AKCpBvWUePYKt6SyKZZtuWkWxV7hfiiSyLpx3xetPih9jLAEPbkwHGFRzYTHVoKiiXj3azqyo");
-                    http_client.setRequestProperty("Authorization", "Bearer " + cred.getPassword().getPlainText()) + ");
+                    http_client.setRequestProperty("Authorization", "Bearer ${token}");
                     http_client.setRequestMethod('GET')
                     http_client.connect()
                     def response = [:]
