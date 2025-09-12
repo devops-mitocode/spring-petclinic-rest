@@ -26,7 +26,7 @@ properties([
                         def url = 'http://34.210.78.163:8081/artifactory/api/storage/spring-petclinic-rest-snapshot/org/springframework/samples/spring-petclinic-rest'
                         def http_client = new URL(url).openConnection() as HttpURLConnection
                         // http_client.setRequestProperty("Authorization", "Basic YWRtaW46TWl0b0NvZGUyMDI1")
-                        http_client.setRequestProperty("Authorization", "Bearer ${AUTH_HEADER}");
+                        http_client.setRequestProperty("Authorization", "Bearer " + env.AUTH_HEADER +");
                         http_client.setRequestMethod('GET')
                         http_client.connect()
                         def response = [:]
