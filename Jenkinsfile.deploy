@@ -66,7 +66,7 @@ pipeline {
                     echo ARTIFACTORY_URL: $ARTIFACTORY_URL
                     echo version ${params.version}
 
-                    curl --location '${ARTIFACTORY_URL}/${REPO}/org.springframework.samples/spring-petclinic-rest/${params.version}/spring-petclinic-rest-${params.version}.jar' \\
+                    curl --location '${ARTIFACTORY_URL}/${REPO}/org/springframework/samples/spring-petclinic-rest/${params.version}/spring-petclinic-rest-${params.version}.jar' \\
                          --header '${AUTH_HEADER}' \\
                          --output spring-petclinic-rest-${params.version}.jar
                          
