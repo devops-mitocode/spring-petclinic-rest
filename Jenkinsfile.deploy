@@ -74,18 +74,18 @@ pipeline {
                 """
             }
         }
-        // stage('Renombra el artefacto') {
-        //     steps {
-        //         sh 'env | sort'
-        //         sh "mv spring-petclinic-rest-${params.version}.jar app-${BUILD_NUMBER}.jar"
-        //         sh 'ls -la'
-        //     }
-        // }
-        // stage('Publica el artefacto en release') {
-        //     steps {
-        //         sh """curl --header '${AUTH_HEADER}' -X PUT "${ARTIFACTORY_URL}/${RELEASE_REPO}/app-${BUILD_NUMBER}.jar" -T app-${BUILD_NUMBER}.jar"""
-        //     }
-        // }
+        stage('Renombra el artefacto') {
+            steps {
+                sh 'env | sort'
+                sh "mv spring-petclinic-rest-${params.version}.jar app-${BUILD_NUMBER}.jar"
+                sh 'ls -la'
+            }
+        }
+        stage('Publica el artefacto en release') {
+            steps {
+                sh """curl --header '${AUTH_HEADER}' -X PUT "${ARTIFACTORY_URL}/${RELEASE_REPO}/app-${BUILD_NUMBER}.jar" -T app-${BUILD_NUMBER}.jar"""
+            }
+        }
     }
     // post {
     //     always {
