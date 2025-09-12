@@ -62,7 +62,10 @@ properties([
                     }
                 '''
             ],
-            fallbackScript: [classpath: [], sandbox: true, script: ''' return ["No versions available"] ''']
+            fallbackScript: [
+                $class: 'GroovyScript',
+                script: [ classpath: [], sandbox: true, script: 'return ["No versions available"]' ]
+            ]
          ]
         ]
     ])
