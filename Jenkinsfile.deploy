@@ -49,7 +49,7 @@ pipeline {
         ARTIFACTORY_URL = 'http://34.210.78.163:8081/artifactory'
         REPO = 'spring-petclinic-rest-snapshot'
         RELEASE_REPO = 'spring-petclinic-rest-release'
-        AUTH_HEADER = 'Authorization: Basic YWRtaW46TWl0b0NvZGUyMDI1'
+        AUTH_HEADER = 'Authorization: Bearer AKCpBvWUePYKt6SyKZZtuWkWxV7hfiiSyLpx3xetPih9jLAEPbkwHGFRzYTHVoKiiXj3azqyo'
     }
     options {
         skipDefaultCheckout()
