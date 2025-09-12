@@ -20,6 +20,8 @@ properties([
                              ''' 
                         import jenkins.model.*
                         import groovy.json.JsonSlurper
+                        import com.cloudbees.plugins.credentials.*
+
 
                         def cred = CredentialsMatchers.firstOrNull(
                             CredentialsProvider.lookupCredentials(com.cloudbees.plugins.credentials.common.StringCredentials.class, Jenkins.instance, null, null),
