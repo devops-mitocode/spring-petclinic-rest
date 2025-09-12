@@ -34,7 +34,7 @@ properties([
                         CredentialsMatchers.withId('artifactory-token')
                     )
 
-                    println "abc ${cred}"
+                    // println "abc ${cred}"
 
 
                     // def cred = CredentialsMatchers.firstOrNull(
