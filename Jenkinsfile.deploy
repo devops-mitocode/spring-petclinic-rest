@@ -12,58 +12,57 @@ properties([
          filterable: false,
          name: 'version',
          script: [
-             $class: 'GroovyScript',
-             script: [
-                     classpath: [],
-                     sandbox: false,
-                     script:
-                             ''' 
-                        import jenkins.model.*
-                        import groovy.json.JsonSlurper
+            $class: 'GroovyScript',
+            script: [
+                classpath: [],
+                sandbox: false,
+                script:
+                        ''' 
+                    import jenkins.model.*
+                    import groovy.json.JsonSlurper
 
-                        import com.cloudbees.plugins.credentials.CredentialsProvider
-                        import com.cloudbees.plugins.credentials.CredentialsMatchers
-                        import com.cloudbees.plugins.credentials.domains.DomainRequirement
-                        // import com.cloudbees.plugins.credentials.common.StringCredentials
-                        import com.cloudbees.plugins.credentials.common.PasswordCredentials
-                        import org.jenkinsci.plugins.plaincredentials.StringCredentials
-
-
-                        def cred = CredentialsMatchers.firstOrNull(
-                            CredentialsProvider.lookupCredentials(PasswordCredentials.class, Jenkins.instance, null, null),
-                            CredentialsMatchers.withId('artifactory-token')
-                        )
-
-                        println "abc ${cred}"
+                    import com.cloudbees.plugins.credentials.CredentialsProvider
+                    import com.cloudbees.plugins.credentials.CredentialsMatchers
+                    import com.cloudbees.plugins.credentials.domains.DomainRequirement
+                    // import com.cloudbees.plugins.credentials.common.StringCredentials
+                    import com.cloudbees.plugins.credentials.common.PasswordCredentials
+                    import org.jenkinsci.plugins.plaincredentials.StringCredentials
 
 
-                        // def cred = CredentialsMatchers.firstOrNull(
-                        //     CredentialsProvider.lookupCredentials(StringCredentials.class, Jenkins.instance, null, null),
-                        //     CredentialsMatchers.withId('artifactory-token')
-                        // )
+                    def cred = CredentialsMatchers.firstOrNull(
+                        CredentialsProvider.lookupCredentials(PasswordCredentials.class, Jenkins.instance, null, null),
+                        CredentialsMatchers.withId('artifactory-token')
+                    )
 
-                        // println "abc ${cred}"
+                    println "abc ${cred}"
 
-                        def url = 'http://34.210.78.163:8081/artifactory/api/storage/spring-petclinic-rest-snapshot/org/springframework/samples/spring-petclinic-rest'
-                        def http_client = new URL(url).openConnection() as HttpURLConnection
-                        // http_client.setRequestProperty("Authorization", "Basic YWRtaW46TWl0b0NvZGUyMDI1")
-                        http_client.setRequestProperty("Authorization", "Bearer AKCpBvWUePYKt6SyKZZtuWkWxV7hfiiSyLpx3xetPih9jLAEPbkwHGFRzYTHVoKiiXj3azqyo");
-                        http_client.setRequestMethod('GET')
-                        http_client.connect()
-                        def response = [:]
-                        if (http_client.responseCode == 200) {
-                        response = new JsonSlurper().parseText(http_client.inputStream.getText('UTF-8'))
-                        } else {
-                        return ['No results']
-                        }
-                        def version_list = response.children.collect { it.uri.replaceAll('/', '') }
-                        if (version_list) {
-                            return version_list.sort()
-                        }
-                        
-            '''
-             ]
-         ]
+
+                    // def cred = CredentialsMatchers.firstOrNull(
+                    //     CredentialsProvider.lookupCredentials(StringCredentials.class, Jenkins.instance, null, null),
+                    //     CredentialsMatchers.withId('artifactory-token')
+                    // )
+
+                    // println "abc ${cred}"
+
+                    def url = 'http://34.210.78.163:8081/artifactory/api/storage/spring-petclinic-rest-snapshot/org/springframework/samples/spring-petclinic-rest'
+                    def http_client = new URL(url).openConnection() as HttpURLConnection
+                    // http_client.setRequestProperty("Authorization", "Basic YWRtaW46TWl0b0NvZGUyMDI1")
+                    http_client.setRequestProperty("Authorization", "Bearer AKCpBvWUePYKt6SyKZZtuWkWxV7hfiiSyLpx3xetPih9jLAEPbkwHGFRzYTHVoKiiXj3azqyo");
+                    http_client.setRequestMethod('GET')
+                    http_client.connect()
+                    def response = [:]
+                    if (http_client.responseCode == 200) {
+                    response = new JsonSlurper().parseText(http_client.inputStream.getText('UTF-8'))
+                    } else {
+                    return ['No results']
+                    }
+                    def version_list = response.children.collect { it.uri.replaceAll('/', '') }
+                    if (version_list) {
+                        return version_list.sort()
+                    }
+                '''
+            ],
+            fallbackScript: [classpath: [], sandbox: false, script: ''' return ["No versions available"] ''']
         ]
     ])
 ])
