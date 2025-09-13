@@ -114,10 +114,10 @@ pipeline {
             steps {
                 // sh """curl --header "Authorization: Bearer ${ARTIFACTORY_TOKEN}" -X PUT "${ARTIFACTORY_URL}/${RELEASE_REPO}/app-${BUILD_NUMBER}.jar" -T app-${BUILD_NUMBER}.jar"""
                 sh '''
-                curl -v -X PUT \
-                    --header "Authorization: Bearer $ARTIFACTORY_TOKEN" \
-                    "$ARTIFACTORY_URL/$RELEASE_REPO/app-$BUILD_NUMBER.jar" \
-                    -T app-$BUILD_NUMBER.jar
+                    curl -v -X PUT \
+                        --header "Authorization: Bearer $ARTIFACTORY_TOKEN" \
+                        "$ARTIFACTORY_URL/$RELEASE_REPO/app-$BUILD_NUMBER.jar" \
+                        -T app-$BUILD_NUMBER.jar
                 '''
             }
         }
