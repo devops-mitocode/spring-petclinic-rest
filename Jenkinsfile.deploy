@@ -112,7 +112,7 @@ pipeline {
         }
         stage('Publica el artefacto en release') {
             steps {
-                sh """curl --header 'Authorization: Bearer ${ARTIFACTORY_TOKEN}' -X PUT "${ARTIFACTORY_URL}/${RELEASE_REPO}/app-${BUILD_NUMBER}.jar" -T app-${BUILD_NUMBER}.jar"""
+                sh """curl --header "Authorization: Bearer ${ARTIFACTORY_TOKEN}" -X PUT "${ARTIFACTORY_URL}/${RELEASE_REPO}/app-${BUILD_NUMBER}.jar" -T app-${BUILD_NUMBER}.jar"""
             }
         }
     }
