@@ -77,8 +77,7 @@ pipeline {
         REPO = 'spring-petclinic-rest-snapshot'
         RELEASE_REPO = 'spring-petclinic-rest-release'
         // AUTH_HEADER = 'Authorization: Bearer AKCpBvWUgYQ3wxbrv34QT8pKBgiWsC92x9jhw2xbEw8LYC9mPAj9PBqXMEbVskh49VaHj88rS'
-        ARTIFACTORY_TOKEN = credentials('artifactory-token')
-        
+        ARTIFACTORY_TOKEN = credentials('artifactory-token')        
     }
     options {
         skipDefaultCheckout()
@@ -86,9 +85,6 @@ pipeline {
     stages {
         stage('Descarga artefacto') {
             steps {
-
-                env.AUTH_HEADER = "Authorization: Bearer ${env.ARTIFACTORY_TOKEN}"
-
                 sh """
                     env | sort
                     cat /etc/os-release
@@ -99,10 +95,8 @@ pipeline {
                     echo ARTIFACTORY_URL: $ARTIFACTORY_URL
                     echo version ${params.version}
 
-                    env.AUTH_HEADER = "Authorization: Bearer ${env.ARTIFACTORY_TOKEN}"
-
                     curl -v --location '${ARTIFACTORY_URL}/${REPO}/org/springframework/samples/spring-petclinic-rest/${params.version}/spring-petclinic-rest-${params.version}.jar' \\
-                         --header '${AUTH_HEADER}' \\
+                         --header "Authorization: Bearer ${ARTIFACTORY_TOKEN}" \\
                          --output spring-petclinic-rest-${params.version}.jar
                          
                     ls -lha
