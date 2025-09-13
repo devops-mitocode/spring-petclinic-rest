@@ -91,12 +91,12 @@ pipeline {
                     curl --version
 
                     echo ARTIFACTORY_URL: $ARTIFACTORY_URL
-                    echo version: "${version}"
-                    echo version: "$version"
+                    echo version: ${version}
+                    echo version: $version
 
-                    curl -v --location "$ARTIFACTORY_URL/$REPO/org/springframework/samples/spring-petclinic-rest/${params.version}/spring-petclinic-rest-${params.version}.jar" \
+                    curl -v --location "$ARTIFACTORY_URL/$REPO/org/springframework/samples/spring-petclinic-rest/${version}/spring-petclinic-rest-${version}.jar" \
                         --header "Authorization: Bearer $ARTIFACTORY_TOKEN" \
-                        --output "spring-petclinic-rest-${params.version}.jar"
+                        --output "spring-petclinic-rest-${version}.jar"
 
                     ls -lha
                 '''
