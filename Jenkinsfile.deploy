@@ -35,7 +35,7 @@ properties([
                         null,
                         (List<DomainRequirement>) []
                     )
-                    def tokenCred = CredentialsMatchers.firstOrNull(stringCreds, CredentialsMatchers.withId(tokenCredId))
+                    def tokenCred = CredentialsMatchers.firstOrNull(creds, CredentialsMatchers.withId('artifactory-token'))
                     if (!tokenCred) {
                     return ['No versions (missing credentials)']
                     }
