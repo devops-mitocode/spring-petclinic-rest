@@ -85,22 +85,20 @@ pipeline {
     stages {
         stage('Descarga artefacto') {
             steps {
-                sh """
+                sh '''
                     env | sort
                     cat /etc/os-release
                     curl --version
-                    java --version
-                    mvn --version
 
                     echo ARTIFACTORY_URL: $ARTIFACTORY_URL
-                    echo version ${params.version}
+                    echo version: '"${params.version}"'
 
-                    curl -v --location '${ARTIFACTORY_URL}/${REPO}/org/springframework/samples/spring-petclinic-rest/${params.version}/spring-petclinic-rest-${params.version}.jar' \\
-                         --header "Authorization: Bearer ${ARTIFACTORY_TOKEN}" \\
-                         --output spring-petclinic-rest-${params.version}.jar
-                         
+                    curl -v --location "$ARTIFACTORY_URL/$REPO/org/springframework/samples/spring-petclinic-rest/${params.version}/spring-petclinic-rest-${params.version}.jar" \
+                        --header "Authorization: Bearer $ARTIFACTORY_TOKEN" \
+                        --output "spring-petclinic-rest-${params.version}.jar"
+
                     ls -lha
-                """
+                '''
             }
         }
         stage('Renombra el artefacto') {
@@ -112,14 +110,12 @@ pipeline {
         }
         stage('Publica el artefacto en release') {
             steps {
-                sh """curl --header 'Authorization: Bearer ${ARTIFACTORY_TOKEN}' -X PUT "${ARTIFACTORY_URL}/${RELEASE_REPO}/app-${BUILD_NUMBER}.jar" -T app-${BUILD_NUMBER}.jar"""
-                
-                // sh '''
-                //     curl -v -X PUT \
-                //         --header "Authorization: Bearer $ARTIFACTORY_TOKEN" \
-                //         "$ARTIFACTORY_URL/$RELEASE_REPO/app-$BUILD_NUMBER.jar" \
-                //         -T app-$BUILD_NUMBER.jar
-                // '''
+                sh '''
+                    curl -v -X PUT \
+                        --header "Authorization: Bearer $ARTIFACTORY_TOKEN" \
+                        "$ARTIFACTORY_URL/$RELEASE_REPO/app-$BUILD_NUMBER.jar" \
+                        -T app-$BUILD_NUMBER.jar
+                '''
             }
         }
     }
