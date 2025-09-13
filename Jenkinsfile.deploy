@@ -29,7 +29,12 @@ properties([
                     import org.jenkinsci.plugins.plaincredentials.StringCredentials
 
 
-
+                    def creds = CredentialsProvider.lookupCredentials(
+                        StringCredentials.class,
+                        Jenkins.get(),
+                        null,
+                        (List<DomainRequirement>) []
+                    )
 
                     def url = 'http://54.190.133.244:8081/artifactory/api/storage/spring-petclinic-rest-snapshot/org/springframework/samples/spring-petclinic-rest'
                     def http_client = new URL(url).openConnection() as HttpURLConnection
