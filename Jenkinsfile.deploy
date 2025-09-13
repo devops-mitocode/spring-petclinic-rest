@@ -76,7 +76,8 @@ pipeline {
         ARTIFACTORY_URL = 'http://54.190.133.244:8081/artifactory'
         REPO = 'spring-petclinic-rest-snapshot'
         RELEASE_REPO = 'spring-petclinic-rest-release'
-        AUTH_HEADER = 'Authorization: Bearer AKCpBvWUgYQ3wxbrv34QT8pKBgiWsC92x9jhw2xbEw8LYC9mPAj9PBqXMEbVskh49VaHj88rS'
+        // AUTH_HEADER = 'Authorization: Bearer AKCpBvWUgYQ3wxbrv34QT8pKBgiWsC92x9jhw2xbEw8LYC9mPAj9PBqXMEbVskh49VaHj88rS'
+        AUTH_HEADER = credentials('artifactory-token')
     }
     options {
         skipDefaultCheckout()
@@ -85,6 +86,7 @@ pipeline {
         stage('Descarga artefacto') {
             steps {
                 sh """
+                    env | sort
                     cat /etc/os-release
                     curl --version
                     java --version
@@ -97,7 +99,7 @@ pipeline {
                          --header '${AUTH_HEADER}' \\
                          --output spring-petclinic-rest-${params.version}.jar
                          
-                    ls -la
+                    ls -lha
                 """
             }
         }
