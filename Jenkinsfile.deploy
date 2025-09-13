@@ -44,7 +44,7 @@ properties([
                     def http_client = new URL(url).openConnection() as HttpURLConnection
                     // http_client.setRequestProperty("Authorization", "Basic YWRtaW46TWl0b0NvZGUyMDI1")
                     // http_client.setRequestProperty("Authorization", "Bearer AKCpBvWUePYKt6SyKZZtuWkWxV7hfiiSyLpx3xetPih9jLAEPbkwHGFRzYTHVoKiiXj3azqyo");
-                    http_client.setRequestProperty("Authorization", "Bearer ${token}");
+                    http_client.setRequestProperty("Authorization", "Bearer AKCpBvWUgYQ3wxbrv34QT8pKBgiWsC92x9jhw2xbEw8LYC9mPAj9PBqXMEbVskh49VaHj88rS");
                     http_client.setRequestMethod('GET')
                     http_client.connect()
                     def response = [:]
