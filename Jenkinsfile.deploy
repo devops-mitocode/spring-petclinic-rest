@@ -1,8 +1,3 @@
-// invoke credentials jenkins
-withCredentials([string(credentialsId: 'artifactory-token', variable: 'ARTIFACTORY_TOKEN')]) {
-    env.AUTH_HEADER = "Authorization: Bearer ${ARTIFACTORY_TOKEN}"
-}
-
 properties([
     parameters([
         [$class: 'CascadeChoiceParameter',
@@ -43,8 +38,6 @@ properties([
 
                     def url = 'http://54.190.133.244:8081/artifactory/api/storage/spring-petclinic-rest-snapshot/org/springframework/samples/spring-petclinic-rest'
                     def http_client = new URL(url).openConnection() as HttpURLConnection
-                    // http_client.setRequestProperty("Authorization", "Basic YWRtaW46TWl0b0NvZGUyMDI1")
-                    // http_client.setRequestProperty("Authorization", "Bearer AKCpBvWUgYQ3wxbrv34QT8pKBgiWsC92x9jhw2xbEw8LYC9mPAj9PBqXMEbVskh49VaHj88rS");
                     http_client.setRequestProperty("Authorization", "Bearer ${token}");
                     http_client.setRequestMethod('GET')
                     http_client.connect()
@@ -76,7 +69,6 @@ pipeline {
         ARTIFACTORY_URL = 'http://54.190.133.244:8081/artifactory'
         REPO = 'spring-petclinic-rest-snapshot'
         RELEASE_REPO = 'spring-petclinic-rest-release'
-        // AUTH_HEADER = 'Authorization: Bearer AKCpBvWUgYQ3wxbrv34QT8pKBgiWsC92x9jhw2xbEw8LYC9mPAj9PBqXMEbVskh49VaHj88rS'
         ARTIFACTORY_TOKEN = credentials('artifactory-token')        
     }
     options {
