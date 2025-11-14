@@ -24,6 +24,16 @@ pipeline {
                 }
             }
         } 
+        stage('Coverage') {
+            steps {
+                sh 'mvn jacoco:report -B -ntp'
+            }
+            post {
+                success {
+                    recordCoverage(tools: [[parser: 'JACOCO']])
+                }
+            }
+        }
         stage('Package') {
             steps {
                 sh 'mvn package -DskipTests -B -ntp'
