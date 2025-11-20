@@ -10,7 +10,7 @@ pipeline {
     }
     options {
         timeout(time: 5, unit: 'MINUTES')
-        buildDiscarder(logRotator(numToKeepStr: '2'))
+        buildDiscarder(logRotator(numToKeepStr: '3'))
     }
     stages {
         // stage('Checkout SCM') {
