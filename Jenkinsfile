@@ -11,7 +11,6 @@ pipeline {
     options {
         timeout(time: 5, unit: 'MINUTES')
         buildDiscarder(logRotator(numToKeepStr: '2'))
-        // ansiColor('xterm')
     }
     stages {
         // stage('Checkout SCM') {
@@ -26,12 +25,13 @@ pipeline {
         }
         stage('Test') {
             steps {
+                // sh 'mvn test -B -ntp'
                 sh 'mvn test -Dmaven.test.failure.ignore=true -B -ntp'
             }
             post { 
                 success { 
-                    junit 'target/surefire-reports/*.xml'
-                    // junit testResults: 'target/surefire-reports/*.xml', skipMarkingBuildUnstable: true
+                    // junit 'target/surefire-reports/*.xml'
+                    junit testResults: 'target/surefire-reports/*.xml', skipMarkingBuildUnstable: true
                 }
             }
         } 
