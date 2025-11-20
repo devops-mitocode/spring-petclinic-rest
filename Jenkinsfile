@@ -9,7 +9,7 @@ pipeline {
         }
     }
     options {
-        timeout(time: 1, unit: 'MINUTES')
+        timeout(time: 5, unit: 'MINUTES')
         buildDiscarder(logRotator(numToKeepStr: '2'))
         // ansiColor('xterm')
     }
