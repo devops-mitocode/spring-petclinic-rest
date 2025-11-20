@@ -12,6 +12,10 @@ pipeline {
         timeout(time: 5, unit: 'MINUTES')
         buildDiscarder(logRotator(numToKeepStr: '3'))
     }
+    trigger {
+        pollSCM('* * * * *')
+        githubPush()
+    }
     stages {
         // stage('Checkout SCM') {
         //     steps {
