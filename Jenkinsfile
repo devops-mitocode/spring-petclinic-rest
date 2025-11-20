@@ -1,7 +1,16 @@
 pipeline {
-    agent any
-    tools {
-        maven 'maven3.9.11'
+    // agent any
+    // tools {
+    //     maven 'maven3.9.11'
+    // }
+    agent {
+        docker {
+            image 'maven:3.9.11-eclipse-temurin-17-alpine'
+        }
+    }
+    options {
+        timeout(time: 10, unit: 'MINUTES')
+        // ansiColor('xterm')
     }
     stages {
         // stage('Checkout SCM') {
@@ -21,6 +30,7 @@ pipeline {
             post { 
                 success { 
                     junit 'target/surefire-reports/*.xml'
+                    // junit testResults: 'target/surefire-reports/*.xml', skipMarkingBuildUnstable: true
                 }
             }
         } 
@@ -42,7 +52,7 @@ pipeline {
     }
     post { 
         success { 
-            archiveArtifacts artifacts: 'target/*.jar'
+            archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
             cleanWs()
         }
     }
