@@ -59,7 +59,7 @@ pipeline {
         success { 
             archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
         }
-        always {
+        cleanup {
             cleanWs()
         }
     }
