@@ -13,7 +13,7 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '3'))
     }
     triggers {
-        pollSCM('* * * * *')
+        // pollSCM('* * * * *')
         githubPush()
     }
     stages {
