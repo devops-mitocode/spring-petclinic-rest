@@ -53,7 +53,14 @@ pipeline {
             steps {
                 sh 'mvn package -DskipTests -B -ntp'
             }
-        }                        
+        }
+        stage('Sonarqube') {
+            steps {
+                withSonarQubeEnv('sonarqube') {
+                    sh 'mvn sonar:sonar -B -ntp'
+                }
+            }
+        }                   
     }
     post { 
         success { 
