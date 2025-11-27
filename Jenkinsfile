@@ -83,6 +83,26 @@ pipeline {
                 sh 'mvn clean package -DskipTests -B -ntp'
             }
         }
+        stage("Publish Artifacts") {
+            steps{
+                script{
+
+                    // Forma 1: Usando RtMaven
+
+                    def releases = 'spring-petclinic-rest-release'
+                    def snapshots = 'spring-petclinic-rest-snapshot'
+                    
+                    def server = Artifactory.server 'artifactory'
+                    def rtMaven = Artifactory.newMavenBuild()
+                    rtMaven.deployer server: server, releaseRepo: releases, snapshotRepo: snapshots
+                    def buildInfo = rtMaven.run pom: 'pom.xml', goals: 'clean install -B -ntp -DskipTests'
+
+
+                    server.publishBuildInfo buildInfo
+
+                }
+            }
+    }
     }
     // post { 
     //     success { 
