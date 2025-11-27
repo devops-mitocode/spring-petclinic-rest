@@ -87,6 +87,8 @@ pipeline {
             steps{
                 script{
 
+                    sh 'env | sort'
+
                     // Forma 1: Usando RtMaven
 
                     def releases = 'spring-petclinic-rest-release'
