@@ -1,0 +1,22 @@
+pipeline {
+    agent {
+        docker {
+            image 'maven:3.9.11-eclipse-temurin-17-alpine'
+        }
+    }
+    options {
+        timeout(time: 5, unit: 'MINUTES')
+        buildDiscarder(logRotator(numToKeepStr: '3'))
+    }
+    triggers {
+        // pollSCM('* * * * *')
+        githubPush()
+    }
+    stages {
+        stage("Build and Package") {
+            steps{
+                sh 'mvn clean package -DskipTests -B -ntp'
+            }
+        }
+    }
+}
