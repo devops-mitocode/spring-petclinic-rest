@@ -91,18 +91,42 @@ pipeline {
 
                     // Forma 1: Usando RtMaven
 
-                    env.MAVEN_HOME = '/usr/share/maven'
+                    // env.MAVEN_HOME = '/usr/share/maven'
 
-                    def releases = 'spring-petclinic-rest-release'
-                    def snapshots = 'spring-petclinic-rest-snapshot'
+                    // def releases = 'spring-petclinic-rest-release'
+                    // def snapshots = 'spring-petclinic-rest-snapshot'
                     
+                    // def server = Artifactory.server 'artifactory'
+                    // def rtMaven = Artifactory.newMavenBuild()
+                    // rtMaven.deployer server: server, releaseRepo: releases, snapshotRepo: snapshots
+                    // def buildInfo = rtMaven.run pom: 'pom.xml', goals: 'clean install -B -ntp -DskipTests'
+
+                    // server.publishBuildInfo buildInfo
+
+                    // Forma 2 - File Spec
                     def server = Artifactory.server 'artifactory'
-                    def rtMaven = Artifactory.newMavenBuild()
-                    rtMaven.deployer server: server, releaseRepo: releases, snapshotRepo: snapshots
-                    def buildInfo = rtMaven.run pom: 'pom.xml', goals: 'clean install -B -ntp -DskipTests'
+                    def targetRepo = 'spring-petclinic-rest-release'
 
+                    def pom = readMavenPom file: 'pom.xml'
+                    println pom
 
-                    server.publishBuildInfo buildInfo
+                    // def groupIdPath = pom.groupId.replaceAll("\\.", "/")
+                    // println groupIdPath
+
+                    def uploadSpec = """
+                        {
+                            "files": [
+                                {
+                                    "pattern": "target/.*.jar",
+                                    "target": "${targetRepo}/${pom.groupId}/${pom.artifactId}/${pom.version}/",
+                                    "regexp": "true",
+                                    "props": "build.url=${RUN_DISPLAY_URL};build.user=${USER}"
+                                }
+                            ]
+                        }
+                    """
+                    server.upload spec: uploadSpec
+
 
                 }
             }
