@@ -18,5 +18,10 @@ pipeline {
                 sh 'mvn clean package -DskipTests -B -ntp'
             }
         }
+        stage("Publish Artifacts on Docker") {
+            steps{
+                sh 'docker --version'
+            }
+        }
     }
 }
