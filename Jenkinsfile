@@ -91,6 +91,8 @@ pipeline {
 
                     // Forma 1: Usando RtMaven
 
+                    env.MAVEN_HOME = '/usr/share/maven'
+
                     def releases = 'spring-petclinic-rest-release'
                     def snapshots = 'spring-petclinic-rest-snapshot'
                     
