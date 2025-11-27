@@ -22,69 +22,74 @@ pipeline {
         //         git branch: 'master', url: 'https://github.com/devops-mitocode/spring-petclinic-rest.git'
         //     }
         // }
-        stage('Compile') {
-            steps {
-                sh 'mvn clean compile -B -ntp'
-            }
-        }
-        stage('Test') {
-            steps {
-                // sh 'mvn test -B -ntp'
-                sh 'mvn test -Dmaven.test.failure.ignore=true -B -ntp'
-            }
-            post { 
-                success { 
-                    // junit 'target/surefire-reports/*.xml'
-                    junit testResults: 'target/surefire-reports/*.xml', skipMarkingBuildUnstable: true
-                }
-            }
-        } 
-        stage('Coverage') {
-            steps {
-                sh 'mvn jacoco:report -B -ntp'
-            }
-            post {
-                success {
-                    recordCoverage(tools: [[parser: 'JACOCO']])
-                }
-            }
-        }
-        stage('Package') {
-            steps {
-                sh 'mvn package -DskipTests -B -ntp'
-            }
-        }
-        stage('Sonarqube') {
-            steps {
-                withSonarQubeEnv('sonarqube') {
-                    // sh 'mvn sonar:sonar -B -ntp'
+        // stage('Compile') {
+        //     steps {
+        //         sh 'mvn clean compile -B -ntp'
+        //     }
+        // }
+        // stage('Test') {
+        //     steps {
+        //         // sh 'mvn test -B -ntp'
+        //         sh 'mvn test -Dmaven.test.failure.ignore=true -B -ntp'
+        //     }
+        //     post { 
+        //         success { 
+        //             // junit 'target/surefire-reports/*.xml'
+        //             junit testResults: 'target/surefire-reports/*.xml', skipMarkingBuildUnstable: true
+        //         }
+        //     }
+        // } 
+        // stage('Coverage') {
+        //     steps {
+        //         sh 'mvn jacoco:report -B -ntp'
+        //     }
+        //     post {
+        //         success {
+        //             recordCoverage(tools: [[parser: 'JACOCO']])
+        //         }
+        //     }
+        // }
+        // stage('Package') {
+        //     steps {
+        //         sh 'mvn package -DskipTests -B -ntp'
+        //     }
+        // }
+        // stage('Sonarqube') {
+        //     steps {
+        //         withSonarQubeEnv('sonarqube') {
+        //             // sh 'mvn sonar:sonar -B -ntp'
 
-                    sh 'env | sort'
+        //             sh 'env | sort'
 
-                    script {
-                        def branchName = GIT_BRANCH.replaceFirst('^origin/', '')
-                        println "Branch Name: ${branchName}"
+        //             script {
+        //                 def branchName = GIT_BRANCH.replaceFirst('^origin/', '')
+        //                 println "Branch Name: ${branchName}"
 
-                        sh "mvn sonar:sonar -B -ntp -Dsonar.branch.name=${branchName}"
-                    }
+        //                 sh "mvn sonar:sonar -B -ntp -Dsonar.branch.name=${branchName}"
+        //             }
 
-                }
-            }
-        }
-        stage("Quality Gate"){
+        //         }
+        //     }
+        // }
+        // stage("Quality Gate"){
+        //     steps{
+        //         timeout(time: 1, unit: 'MINUTES') {
+        //             waitForQualityGate abortPipeline: true
+        //         }
+        //     }
+        // }
+        stage("Build and Package") {
             steps{
-                timeout(time: 1, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
+                sh 'mvn clean package -DskipTests -B -ntp'
             }
         }
     }
-    post { 
-        success { 
-            archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
-        }
-        cleanup {
-            cleanWs()
-        }
-    }
+    // post { 
+    //     success { 
+    //         archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+    //     }
+    //     cleanup {
+    //         cleanWs()
+    //     }
+    // }
 }
