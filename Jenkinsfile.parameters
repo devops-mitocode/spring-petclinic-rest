@@ -4,7 +4,7 @@ properties([
             $class: 'ChoiceParameter',
             choiceType: 'PT_SINGLE_SELECT',
             description: 'Select the PetType',
-            filterLength: 2,
+            filterLength: 1,
             filterable: true,
             name: 'PetTypes',
             script: [
