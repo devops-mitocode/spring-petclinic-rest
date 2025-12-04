@@ -21,6 +21,9 @@ pipeline {
         }
         stage("Publish Artifacts on Docker") {
             agent any
+            options {
+                skipDefaultCheckout()
+            }
             steps{
                 script {
                     def pom = readMavenPom file: 'pom.xml'
