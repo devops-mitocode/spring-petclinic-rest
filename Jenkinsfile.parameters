@@ -3,6 +3,9 @@ properties([
         [
             $class: 'CascadeChoiceParameter',
             choiceType: 'PT_SINGLE_SELECT',
+            description: 'Select the PetType',
+            filterLength: 1,
+            filterable: true,
             name: 'PetTypes',
             script: [
                 $class: 'GroovyScript',
