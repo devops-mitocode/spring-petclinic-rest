@@ -1,10 +1,10 @@
 properties([
     parameters([
         [
-            $class: 'CascadeChoiceParameter',
+            $class: 'ChoiceParameter',
             choiceType: 'PT_SINGLE_SELECT',
             description: 'Select the PetType',
-            filterLength: 1,
+            filterLength: 2,
             filterable: true,
             name: 'PetTypes',
             script: [
