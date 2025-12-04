@@ -1,5 +1,5 @@
 pipeline {
-    agent none
+    agent any
     options {
         timeout(time: 5, unit: 'MINUTES')
         buildDiscarder(logRotator(numToKeepStr: '3'))
@@ -10,10 +10,6 @@ pipeline {
     }
     stages {
         stage("Publish Artifacts on Docker") {
-            agent any
-            options {
-                skipDefaultCheckout()
-            }
             steps{
                 script {
                     def pom = readMavenPom file: 'pom.xml'
