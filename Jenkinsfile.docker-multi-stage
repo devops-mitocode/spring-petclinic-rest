@@ -1,0 +1,31 @@
+pipeline {
+    agent none
+    options {
+        timeout(time: 5, unit: 'MINUTES')
+        buildDiscarder(logRotator(numToKeepStr: '3'))
+    }
+    triggers {
+        // pollSCM('* * * * *')
+        githubPush()
+    }
+    stages {
+        stage("Publish Artifacts on Docker") {
+            agent any
+            options {
+                skipDefaultCheckout()
+            }
+            steps{
+                script {
+                    def pom = readMavenPom file: 'pom.xml'
+                    
+                    def app = docker.build("danycenas/${pom.artifactId}:${pom.version}")
+
+                    docker.withRegistry('https://registry.hub.docker.com/', 'dockerhub-credentials') {
+                        app.push()
+                        app.push('latest')
+                    }
+                }
+            }
+        }
+    }
+}

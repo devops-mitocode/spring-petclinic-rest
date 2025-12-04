@@ -1,0 +1,10 @@
+FROM maven:3.9.11-eclipse-temurin-17-alpine AS build
+WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests -B -ntp
+
+FROM eclipse-temurin:17-jre-alpine-3.22
+WORKDIR /workspace
+COPY --from=build /app/target/spring-petclinic-rest-*.jar app.jar
+EXPOSE 9966
+ENTRYPOINT [ "java", "-jar", "/workspace/app.jar" ]
