@@ -14,7 +14,7 @@ pipeline {
                 script {
                     def pom = readMavenPom file: 'pom.xml'
                     
-                    def app = docker.build("danycenas/${pom.artifactId}:${pom.version}", "-f Dockerfile.multi-stage")
+                    def app = docker.build("danycenas/${pom.artifactId}:${pom.version}", "-f Dockerfile.multi-stage .")
 
                     docker.withRegistry('https://registry.hub.docker.com/', 'dockerhub-credentials') {
                         app.push()
