@@ -14,9 +14,9 @@ properties([
                     sandbox: false,
                     script:
                         '''
-                            def connection = new URL("https://e7e18468d466-10-244-13-97-9966.saci.r.killercoda.com/petclinic/api/pettypes").openConnection() as HttpURLConnection
-                            def slurper = new groovy.json.JsonSlurper()
-                            def result = slurper.parseText(connection.getInputStream().getText())
+                            import groovy.json.JsonSlurper
+                            def url = 'https://e7e18468d466-10-244-13-97-9966.saci.r.killercoda.com/petclinic/api/pettypes'
+                            def result = new JsonSlurper().parse(new URL(url))
                             def values = result.collect { it.name }
                             return values
                         '''
