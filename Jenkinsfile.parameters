@@ -1,3 +1,25 @@
+properties([
+    parameters([
+        [
+            $class: 'CascadeChoiceParameter',
+            choiceType: 'PT_SINGLE_SELECT',
+            name: 'PetTypes',
+            script: [
+                $class: 'GroovyScript',
+                script: [
+                    classpath: [],
+                    sandbox: false,
+                    script:
+                            '''
+                            import jenkins.model.*
+                            import groovy.json.JsonSlurper
+                            '''
+                ],
+                fallbackScript: [classpath: [], sandbox: true, script: ''' return ["No versions available"] ''']
+            ]
+        ]
+    ])
+])  
 pipeline {
     agent any
     parameters {
