@@ -1,0 +1,16 @@
+pipeline {
+  agent {
+    kubernetes {
+      defaultContainer 'maven'
+      yamlFile 'KubernetesPod.yaml'
+    }
+  }
+
+  stages {
+    stage('Run maven') {
+      steps {
+        sh 'mvn clean package -DskipTests -B -ntp'
+      }
+    }
+  }
+}
