@@ -7,10 +7,37 @@ pipeline {
   }
 
   stages {
-    stage('Run maven') {
-      steps {
-        sh 'mvn clean package -DskipTests -B -ntp'
-      }
-    }
+        stage('Run maven') {
+            steps {
+              sh 'mvn clean package -DskipTests -B -ntp'
+            }
+        }
+        stage("Publish Artifacts on Docker") {
+            steps{
+                container('docker'){
+                    sh 'cat /etc/os-release'
+                    sh 'docker --version'
+                    sh 'git --version'
+                    sh 'whoami'
+
+
+                    script {
+                        def pom = readMavenPom file: 'pom.xml'
+                        def imageVersion = "danycenas/${pom.artifactId}:${pom.version}"
+                        def imageLatest = "danycenas/${pom.artifactId}:latest"
+                        env.IMAGE_VERSION = "${imageVersion}"
+
+
+                        withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                            sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+                            sh """
+                                docker buildx build -t ${imageVersion} --push .
+                                docker buildx build -t ${imageLatest} --push .
+                            """
+                        }
+                    }
+                }
+            }
+        }    
   }
 }
