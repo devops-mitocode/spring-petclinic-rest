@@ -38,6 +38,11 @@ pipeline {
                     }
                 }
             }
-        }    
+        }
+        stage('K8s deploy') {
+            steps {
+              echo 'tbd...'
+            }
+        }
   }
 }
