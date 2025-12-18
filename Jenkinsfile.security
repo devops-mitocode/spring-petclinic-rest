@@ -104,7 +104,7 @@ pipeline {
             agent {
                 docker {
                     image 'aquasec/trivy:0.68.2'
-                    reuseNode false
+                    reuseNode true
                     args "--entrypoint='' -u root:root -v /var/run/docker.sock:/var/run/docker.sock"
                 }
             }
