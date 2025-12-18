@@ -25,10 +25,10 @@ pipeline {
 
                     echo """
                         Project:
-                            groupId    = ${env.GROUP_ID}
-                            artifactId = ${env.ARTIFACT_ID}
-                            version    = ${env.VERSION}
-                            image      = ${env.IMAGE}
+                        groupId    = ${env.GROUP_ID}
+                        artifactId = ${env.ARTIFACT_ID}
+                        version    = ${env.VERSION}
+                        image      = ${env.IMAGE}
                     """
                 }
             }
@@ -98,27 +98,29 @@ pipeline {
             }
         }
 
-        // stage('Security: Trivy Scan (Image)') {
-        //     agent {
-        //         docker {
-        //             image 'aquasec/trivy:latest'
-        //             reuseNode true
-        //             args "-v /var/run/docker.sock:/var/run/docker.sock -v ${env.WORKSPACE}/.trivy-cache:/root/.cache/"
-        //         }
-        //     }
-        //     steps {
-        //         sh '''
-        //             trivy image "$IMAGE" \
-        //                 --severity HIGH,CRITICAL \
-        //                 --ignore-unfixed \
-        //                 --exit-code 1 \
-        //                 --no-progress \
-        //                 --format table -o trivy-image.txt
-        //         '''
-        //     }
-        //     post {
-        //         always { archiveArtifacts artifacts: 'trivy-image.txt', fingerprint: true }
-        //     }
-        // }
+        stage('Security: Trivy Scan (Image)') {
+            agent {
+                docker {
+                    image 'aquasec/trivy:0.68.2'
+                    reuseNode true
+                    args "-v /var/run/docker.sock:/var/run/docker.sock"
+                }
+            }
+            steps {
+                sh '''
+                    trivy image "$IMAGE" \
+                        --severity HIGH,CRITICAL \
+                        --ignore-unfixed \
+                        --exit-code 1 \
+                        --no-progress \
+                        --format table -o trivy-image.txt
+                '''
+            }
+            post {
+                always { 
+                    archiveArtifacts artifacts: 'trivy-image.txt', fingerprint: true
+                }
+            }
+        }
     }
 }
