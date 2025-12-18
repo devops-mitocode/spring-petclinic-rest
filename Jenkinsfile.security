@@ -47,7 +47,8 @@ pipeline {
                     projectVersion: env.VERSION,
                     dependencyTrackUrl: env.DTRACK_BASE_URL,
                     dependencyTrackApiKey: env.DTRACK_API_KEY,
-                    autoCreateProjects: true
+                    autoCreateProjects: true,
+                    synchronous: true
                 )
             }
             post {
