@@ -17,8 +17,8 @@ pipeline {
                     env.ARTIFACT_ID = pom.artifactId
                     env.VERSION     = pom.version
 
-                    env.IMAGE_TAG = pom.version
-                    env.IMAGE     = "${env.ARTIFACT_ID}:${env.IMAGE_TAG}"
+                    // env.IMAGE_TAG = pom.version
+                    env.IMAGE     = "${env.ARTIFACT_ID}:${env.VERSION}"
 
                     echo """
                         Project:
@@ -123,6 +123,7 @@ pipeline {
             post {
                 always { 
                     archiveArtifacts artifacts: 'trivy-image.txt', fingerprint: true
+                    cleanWs()
                 }
             }
         }
