@@ -2,7 +2,7 @@ pipeline {
     agent none
 
     environment {
-        DTRACK_BASE_URL = 'http://44.246.191.79:9091'
+        DTRACK_BASE_URL = 'http://54.212.116.52:9091'
         DTRACK_API_KEY  = credentials('dependencytrack-token')
     }
 
@@ -58,40 +58,6 @@ pipeline {
                 }
             }
         }
-
-        // stage('SBOM (Trivy) → Dependency-Track') {
-        //     agent {
-        //         docker {
-        //             image 'aquasec/trivy:0.68.2'
-        //             reuseNode true
-        //             args "--entrypoint='' -u root:root -v /var/run/docker.sock:/var/run/docker.sock"
-        //         }
-        //     }
-        //     options { skipDefaultCheckout() }
-        //     steps {
-        //         sh '''
-        //         trivy image "$IMAGE" \
-        //             --format cyclonedx \
-        //             --output sbom-trivy.json \
-        //             --no-progress
-        //         '''
-
-        //         dependencyTrackPublisher(
-        //             artifact: 'sbom-trivy.json',
-        //             projectName: env.ARTIFACT_ID,
-        //             projectVersion: env.VERSION,
-        //             dependencyTrackUrl: env.DTRACK_BASE_URL,
-        //             dependencyTrackApiKey: env.DTRACK_API_KEY,
-        //             autoCreateProjects: true,
-        //             synchronous: true
-        //         )
-        //     }
-        //     post {
-        //         always {
-        //             archiveArtifacts artifacts: 'sbom-trivy.json', fingerprint: true
-        //         }
-        //     }
-        // }
 
         stage('Build Artifact') {
             agent {
