@@ -59,41 +59,41 @@ pipeline {
             }
         }
 
-        stage('Build Artifact') {
-            agent {
-                docker {
-                    image 'maven:3.9.9-eclipse-temurin-17-alpine'
-                    reuseNode true
-                }
-            }
-            options {
-                skipDefaultCheckout()
-            }
-            steps {
-                sh 'mvn -B -ntp -DskipTests clean package'
-            }
-            post {
-                success { 
-                    archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
-                }
-            }
-        }
+        // stage('Build Artifact') {
+        //     agent {
+        //         docker {
+        //             image 'maven:3.9.9-eclipse-temurin-17-alpine'
+        //             reuseNode true
+        //         }
+        //     }
+        //     options {
+        //         skipDefaultCheckout()
+        //     }
+        //     steps {
+        //         sh 'mvn -B -ntp -DskipTests clean package'
+        //     }
+        //     post {
+        //         success { 
+        //             archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+        //         }
+        //     }
+        // }
 
-        stage('Build Image') {
-            agent {
-                docker {
-                    image 'docker:29.1.3-cli-alpine3.23'
-                    reuseNode true
-                    args '-u root:root -v /var/run/docker.sock:/var/run/docker.sock'
-                }
-            }
-            options {
-                skipDefaultCheckout()
-            }
-            steps {
-                sh 'docker build --pull -t "$IMAGE" .'
-            }
-        }
+        // stage('Build Image') {
+        //     agent {
+        //         docker {
+        //             image 'docker:29.1.3-cli-alpine3.23'
+        //             reuseNode true
+        //             args '-u root:root -v /var/run/docker.sock:/var/run/docker.sock'
+        //         }
+        //     }
+        //     options {
+        //         skipDefaultCheckout()
+        //     }
+        //     steps {
+        //         sh 'docker build --pull -t "$IMAGE" .'
+        //     }
+        // }
 
         // stage('Scan Image') {
         //     agent {
