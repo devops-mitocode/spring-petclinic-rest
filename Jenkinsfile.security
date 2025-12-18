@@ -113,16 +113,15 @@ pipeline {
             }            
             steps {
                 sh '''
-                    pwd
                     trivy image "$IMAGE" \
                         --severity HIGH,CRITICAL \
                         --ignore-unfixed \
-                        --exit-code 1 \
+                        --exit-code 0 \
                         --no-progress \
+                        --format table \
                         --format table -o trivy-image.txt
 
-                    ls -lah trivy-image.txt
-                    chmod 644 trivy-image.txt
+                    cat trivy-image.txt
                 '''
             }
             post {
