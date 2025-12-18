@@ -19,7 +19,7 @@ pipeline {
                     env.IMAGE     = "${env.ARTIFACT_ID}:${env.VERSION}"
 
                     echo """
-                        Project:
+                        Metadata:
                         groupId    = ${env.GROUP_ID}
                         artifactId = ${env.ARTIFACT_ID}
                         version    = ${env.VERSION}
