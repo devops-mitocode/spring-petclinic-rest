@@ -7,7 +7,7 @@ pipeline {
     }
 
     stages {
-        stage('Init: Project Metadata') {
+        stage('Load Metadata') {
             agent any
             steps {
                 script {
@@ -16,8 +16,6 @@ pipeline {
                     env.GROUP_ID    = pom.groupId
                     env.ARTIFACT_ID = pom.artifactId
                     env.VERSION     = pom.version
-
-                    // env.IMAGE_TAG = pom.version
                     env.IMAGE     = "${env.ARTIFACT_ID}:${env.VERSION}"
 
                     echo """
@@ -31,7 +29,7 @@ pipeline {
             }
         }
 
-        stage('SCA: SBOM + Dependency-Track') {
+        stage('Generate SBOM') {
             agent {
                 docker {
                     image 'maven:3.9.9-eclipse-temurin-17-alpine'
@@ -61,7 +59,7 @@ pipeline {
             }
         }
 
-        stage('Build: Package') {
+        stage('Build Artifact') {
             agent {
                 docker {
                     image 'maven:3.9.9-eclipse-temurin-17-alpine'
@@ -81,7 +79,7 @@ pipeline {
             }
         }
 
-        stage('Build: Image') {
+        stage('Build Image') {
             agent {
                 docker {
                     image 'docker:29.1.3-cli-alpine3.23'
@@ -97,7 +95,7 @@ pipeline {
             }
         }
 
-        stage('Security: Trivy Scan (Image)') {
+        stage('Scan Image') {
             agent {
                 docker {
                     image 'aquasec/trivy:0.68.2'
