@@ -29,21 +29,55 @@ pipeline {
             }
         }
 
-        stage('Generate SBOM') {
+        // stage('Generate SBOM') {
+        //     agent {
+        //         docker {
+        //             image 'maven:3.9.9-eclipse-temurin-17-alpine'
+        //             reuseNode true
+        //         }
+        //     }
+        //     options {
+        //         skipDefaultCheckout()
+        //     }
+        //     steps {
+        //         sh 'mvn -B -ntp cyclonedx:makeAggregateBom'
+
+        //         dependencyTrackPublisher(
+        //             artifact: 'target/bom.json',
+        //             projectName: env.ARTIFACT_ID,
+        //             projectVersion: env.VERSION,
+        //             dependencyTrackUrl: env.DTRACK_BASE_URL,
+        //             dependencyTrackApiKey: env.DTRACK_API_KEY,
+        //             autoCreateProjects: true,
+        //             synchronous: true
+        //         )
+        //     }
+        //     post {
+        //         success { 
+        //             archiveArtifacts artifacts: 'target/bom.json', fingerprint: true
+        //         }
+        //     }
+        // }
+
+        stage('SBOM (Trivy) → Dependency-Track') {
             agent {
                 docker {
-                    image 'maven:3.9.9-eclipse-temurin-17-alpine'
+                    image 'aquasec/trivy:0.68.2'
                     reuseNode true
+                    args "--entrypoint='' -u root:root -v /var/run/docker.sock:/var/run/docker.sock"
                 }
             }
-            options {
-                skipDefaultCheckout()
-            }
+            options { skipDefaultCheckout() }
             steps {
-                sh 'mvn -B -ntp cyclonedx:makeAggregateBom'
+                sh '''
+                trivy image "$IMAGE" \
+                    --format cyclonedx \
+                    --output sbom-trivy.json \
+                    --no-progress
+                '''
 
                 dependencyTrackPublisher(
-                    artifact: 'target/bom.json',
+                    artifact: 'sbom-trivy.json',
                     projectName: env.ARTIFACT_ID,
                     projectVersion: env.VERSION,
                     dependencyTrackUrl: env.DTRACK_BASE_URL,
@@ -53,8 +87,8 @@ pipeline {
                 )
             }
             post {
-                success { 
-                    archiveArtifacts artifacts: 'target/bom.json', fingerprint: true
+                always {
+                    archiveArtifacts artifacts: 'sbom-trivy.json', fingerprint: true
                 }
             }
         }
