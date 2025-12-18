@@ -9,6 +9,9 @@ pipeline {
     stages {
         stage('Init: Project Metadata') {
             agent any
+            options {
+                skipDefaultCheckout()
+            }
             steps {
                 script {
                     def pom = readMavenPom file: 'pom.xml'
@@ -38,6 +41,9 @@ pipeline {
                     reuseNode true
                 }
             }
+            options {
+                skipDefaultCheckout()
+            }            
             steps {
                 sh 'mvn -B -ntp cyclonedx:makeAggregateBom'
 
@@ -65,6 +71,9 @@ pipeline {
                     reuseNode true
                 }
             }
+            options {
+                skipDefaultCheckout()
+            }            
             steps {
                 sh 'mvn -B -ntp -DskipTests clean package'
             }
@@ -80,6 +89,9 @@ pipeline {
                     reuseNode true
                     args '-u root:root -v /var/run/docker.sock:/var/run/docker.sock'
                 }
+            }
+            options {
+                skipDefaultCheckout()
             }
             steps {
                 sh 'docker build --pull -t "$IMAGE" .'
