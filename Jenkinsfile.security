@@ -118,7 +118,6 @@ pipeline {
                         --ignore-unfixed \
                         --exit-code 0 \
                         --no-progress \
-                        --format table \
                         --format table -o trivy-image.txt
 
                     cat trivy-image.txt
