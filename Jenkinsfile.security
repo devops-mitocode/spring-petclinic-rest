@@ -9,9 +9,6 @@ pipeline {
     stages {
         stage('Init: Project Metadata') {
             agent any
-            options {
-                skipDefaultCheckout()
-            }
             steps {
                 script {
                     def pom = readMavenPom file: 'pom.xml'
