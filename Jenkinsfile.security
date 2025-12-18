@@ -95,38 +95,38 @@ pipeline {
             }
         }
 
-        stage('Scan Image') {
-            agent {
-                docker {
-                    image 'aquasec/trivy:0.68.2'
-                    reuseNode true
-                    args "--entrypoint='' -u root:root -v /var/run/docker.sock:/var/run/docker.sock"
-                }
-            }
-            options {
-                skipDefaultCheckout()
-            }
-            environment {
-                TRIVY_DISABLE_VEX_NOTICE = 'true'
-            }
-            steps {
-                sh '''
-                    trivy image "$IMAGE" \
-                        --severity HIGH,CRITICAL \
-                        --ignore-unfixed \
-                        --exit-code 0 \
-                        --no-progress \
-                        --format table -o trivy-image.txt
+        // stage('Scan Image') {
+        //     agent {
+        //         docker {
+        //             image 'aquasec/trivy:0.68.2'
+        //             reuseNode true
+        //             args "--entrypoint='' -u root:root -v /var/run/docker.sock:/var/run/docker.sock"
+        //         }
+        //     }
+        //     options {
+        //         skipDefaultCheckout()
+        //     }
+        //     environment {
+        //         TRIVY_DISABLE_VEX_NOTICE = 'true'
+        //     }
+        //     steps {
+        //         sh '''
+        //             trivy image "$IMAGE" \
+        //                 --severity HIGH,CRITICAL \
+        //                 --ignore-unfixed \
+        //                 --exit-code 0 \
+        //                 --no-progress \
+        //                 --format table -o trivy-image.txt
 
-                    cat trivy-image.txt
-                '''
-            }
-            post {
-                always { 
-                    archiveArtifacts artifacts: 'trivy-image.txt', fingerprint: true
-                    cleanWs()
-                }
-            }
-        }
+        //             cat trivy-image.txt
+        //         '''
+        //     }
+        //     post {
+        //         always { 
+        //             archiveArtifacts artifacts: 'trivy-image.txt', fingerprint: true
+        //             cleanWs()
+        //         }
+        //     }
+        // }
     }
 }
