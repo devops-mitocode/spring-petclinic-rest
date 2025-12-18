@@ -105,8 +105,7 @@ pipeline {
                 docker {
                     image 'aquasec/trivy:0.68.2'
                     reuseNode true
-                    // args "-v /var/run/docker.sock:/var/run/docker.sock"
-                    args "--entrypoint='' -u root:root"
+                    args "--entrypoint='' -u root:root -v /var/run/docker.sock:/var/run/docker.sock"
                 }
             }
             options {
