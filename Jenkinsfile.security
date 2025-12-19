@@ -54,7 +54,6 @@ pipeline {
             post {
                 success { 
                     archiveArtifacts artifacts: 'target/bom.json', fingerprint: true
-                    cleanWs()
                 }
             }
         }
