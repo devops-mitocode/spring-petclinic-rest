@@ -1,9 +1,25 @@
 pipeline {
-    agent any
+    agent none
     stages {
-        stage('Example') {
+        stage('Load Metadata') {
+            agent any
             steps {
-                echo "Hello"
+                script {
+                    def pom = readMavenPom file: 'pom.xml'
+
+                    env.GROUP_ID    = pom.groupId
+                    env.ARTIFACT_ID = pom.artifactId
+                    env.VERSION     = pom.version
+                    env.IMAGE     = "${env.ARTIFACT_ID}:${env.VERSION}"
+
+                    echo """
+                        Metadata:
+                        groupId    = ${env.GROUP_ID}
+                        artifactId = ${env.ARTIFACT_ID}
+                        version    = ${env.VERSION}
+                        image      = ${env.IMAGE}
+                    """
+                }
             }
         }
     }
