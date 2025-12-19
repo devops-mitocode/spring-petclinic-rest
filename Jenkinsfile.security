@@ -1,5 +1,11 @@
 pipeline {
     agent none
+
+    environment {
+        DTRACK_BASE_URL = 'http://54.191.81.157:9091'
+        DTRACK_API_KEY  = credentials('dependencytrack-credentials')
+    }
+
     stages {
         stage('Load Metadata') {
             agent any
@@ -22,5 +28,35 @@ pipeline {
                 }
             }
         }
+        stage('Generate SBOM') {
+            agent {
+                docker {
+                    image 'maven:3.9.9-eclipse-temurin-17-alpine'
+                    reuseNode true
+                }
+            }
+            options {
+                skipDefaultCheckout()
+            }
+            steps {
+                sh 'mvn -B -ntp cyclonedx:makeAggregateBom'
+
+                dependencyTrackPublisher(
+                    artifact: 'target/bom.json',
+                    projectName: env.ARTIFACT_ID,
+                    projectVersion: env.VERSION,
+                    dependencyTrackUrl: env.DTRACK_BASE_URL,
+                    dependencyTrackApiKey: env.DTRACK_API_KEY,
+                    autoCreateProjects: true,
+                    synchronous: true
+                )
+            }
+            post {
+                success { 
+                    archiveArtifacts artifacts: 'target/bom.json', fingerprint: true
+                    cleanWs()
+                }
+            }
+        }        
     }
 }
