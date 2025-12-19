@@ -176,7 +176,7 @@ pipeline {
                 sh '''
                     # Genera SBOM CycloneDX (runtime) desde la imagen Docker usando `trivy sbom` (SBOM-first).
                     # Este inventario refleja componentes realmente presentes en el contenedor (SO + libs empaquetadas).
-                    trivy sbom "$IMAGE" \
+                    trivy sbom image "$IMAGE" \
                         --format cyclonedx \
                         --output trivy-sbom.json \
                         --no-progress
