@@ -124,45 +124,7 @@ pipeline {
         //         }
         //     }
         // }
-        // stage('Generate SBOM (Trivy image)') {
-        //     agent {
-        //         docker {
-        //             image 'aquasec/trivy:0.68.2'
-        //             reuseNode true
-        //             args "--entrypoint='' -u root:root -v /var/run/docker.sock:/var/run/docker.sock"
-        //         }
-        //     }
-        //     options { skipDefaultCheckout() }
-        //     environment { TRIVY_DISABLE_VEX_NOTICE = 'true' }
-        //     steps {
-        //         sh '''
-        //             # Genera SBOM CycloneDX desde la imagen Docker usando `trivy image`.
-        //             # Nota: este modo es vulnerability-scan first; el SBOM es un formato de salida.
-        //             trivy image "$IMAGE" \
-        //                 --format cyclonedx \
-        //                 --output trivy-image-bom.json \
-        //                 --no-progress
-
-        //             ls -lh trivy-image-bom.json
-        //         '''
-
-        //         dependencyTrackPublisher(
-        //             artifact: 'trivy-image-bom.json',
-        //             projectName: env.ARTIFACT_ID,
-        //             projectVersion: env.VERSION,
-        //             dependencyTrackUrl: env.DTRACK_BASE_URL,
-        //             dependencyTrackApiKey: env.DTRACK_API_KEY,
-        //             autoCreateProjects: true,
-        //             synchronous: true
-        //         )
-        //     }
-        //     post {
-        //         always {
-        //             archiveArtifacts artifacts: 'trivy-image-bom.json', fingerprint: true
-        //         }
-        //     }
-        // }
-        stage('Generate SBOM (Trivy sbom)') {
+        stage('Scan Image (Generate SBOM)') {
             agent {
                 docker {
                     image 'aquasec/trivy:0.68.2'
@@ -174,18 +136,18 @@ pipeline {
             environment { TRIVY_DISABLE_VEX_NOTICE = 'true' }
             steps {
                 sh '''
-                    # Genera SBOM CycloneDX (runtime) desde la imagen Docker usando `trivy sbom` (SBOM-first).
-                    # Este inventario refleja componentes realmente presentes en el contenedor (SO + libs empaquetadas).
-                    trivy sbom image "$IMAGE" \
+                    # Genera SBOM CycloneDX desde la imagen Docker usando `trivy image`.
+                    # Nota: este modo es vulnerability-scan first; el SBOM es un formato de salida.
+                    trivy image "$IMAGE" \
                         --format cyclonedx \
-                        --output trivy-sbom.json \
+                        --output trivy-image-bom.json \
                         --no-progress
 
-                    ls -lh trivy-sbom.json
+                    ls -lh trivy-image-bom.json
                 '''
 
                 dependencyTrackPublisher(
-                    artifact: 'trivy-sbom.json',
+                    artifact: 'trivy-image-bom.json',
                     projectName: env.ARTIFACT_ID,
                     projectVersion: env.VERSION,
                     dependencyTrackUrl: env.DTRACK_BASE_URL,
@@ -196,9 +158,9 @@ pipeline {
             }
             post {
                 always {
-                    archiveArtifacts artifacts: 'trivy-sbom.json', fingerprint: true
+                    archiveArtifacts artifacts: 'trivy-image-bom.json', fingerprint: true
                 }
             }
-        }        
+        }       
     }
 }
