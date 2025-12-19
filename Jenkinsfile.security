@@ -124,7 +124,7 @@ pipeline {
         //         }
         //     }
         // }
-        stage('Generate SBOM (Trivy)') {
+        stage('Generate SBOM (Trivy image)') {
             agent {
                 docker {
                     image 'aquasec/trivy:0.68.2'
@@ -132,26 +132,22 @@ pipeline {
                     args "--entrypoint='' -u root:root -v /var/run/docker.sock:/var/run/docker.sock"
                 }
             }
-            options {
-                skipDefaultCheckout()
-            }
-            environment {
-                TRIVY_DISABLE_VEX_NOTICE = 'true'
-            }
+            options { skipDefaultCheckout() }
+            environment { TRIVY_DISABLE_VEX_NOTICE = 'true' }
             steps {
                 sh '''
-                    # Genera SBOM en formato CycloneDX (JSON) desde la IMAGEN
+                    # Genera SBOM CycloneDX desde la imagen Docker usando `trivy image`.
+                    # Nota: este modo es vulnerability-scan first; el SBOM es un formato de salida.
                     trivy image "$IMAGE" \
                         --format cyclonedx \
-                        --output trivy-bom.json \
+                        --output trivy-image-bom.json \
                         --no-progress
 
-                    ls -l trivy-bom.json
+                    ls -lh trivy-image-bom.json
                 '''
 
-                // Publica el SBOM en Dependency-Track
                 dependencyTrackPublisher(
-                    artifact: 'trivy-bom.json',
+                    artifact: 'trivy-image-bom.json',
                     projectName: env.ARTIFACT_ID,
                     projectVersion: env.VERSION,
                     dependencyTrackUrl: env.DTRACK_BASE_URL,
@@ -162,7 +158,7 @@ pipeline {
             }
             post {
                 always {
-                    archiveArtifacts artifacts: 'trivy-bom.json', fingerprint: true
+                    archiveArtifacts artifacts: 'trivy-image-bom.json', fingerprint: true
                 }
             }
         }
