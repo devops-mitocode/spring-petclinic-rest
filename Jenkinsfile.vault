@@ -1,0 +1,57 @@
+pipeline {
+  agent any
+
+
+  stages {
+    stage('Vault: SonarQube token') {
+      steps {
+        script {
+          withVault(
+            vaultSecrets: [[
+              path: 'secret/devops/sonarqube',
+              secretValues: [[ envVar: 'SONAR_TOKEN', vaultKey: 'token' ]]
+            ]]
+          ) {
+            sh '''
+              test -n "$SONAR_TOKEN"
+              echo "SONAR_TOKEN cargado (len): ${#SONAR_TOKEN}"
+
+
+              curl -s -u "$SONAR_TOKEN:" \
+                "http://54.184.1.12:9000/api/system/status" \
+              | jq .
+            '''
+          }
+        }
+      }
+    }
+    stage('Vault: DockerHub token') {
+      steps {
+        script {
+          withVault(
+            vaultSecrets: [[
+              path: 'secret/devops/docker-registry',
+              secretValues: [
+                [envVar: 'DOCKER_USER',  vaultKey: 'username'],
+                [envVar: 'DOCKER_TOKEN', vaultKey: 'token']
+              ]
+            ]]
+          ) {
+            sh '''
+              set -e
+
+
+              test -n "$DOCKER_USER"
+              test -n "$DOCKER_TOKEN"
+              echo "DOCKER_USER cargado: $DOCKER_USER"
+              echo "DOCKER_TOKEN cargado (len): ${#DOCKER_TOKEN}"
+            '''
+
+
+            sh 'echo $DOCKER_TOKEN | docker login -u $DOCKER_USER --password-stdin'
+          }
+        }
+      }
+    }
+  }
+}
