@@ -9,15 +9,19 @@ pipeline {
                 git branch: 'master', url: 'https://github.com/devops-mitocode/spring-petclinic-rest.git'
             }
         }*/   
-        stage('Build') {
+        stage('Compile') {
             steps {
-                sh 'ls -la'
-                sh 'mvn clean package -DskipTests'
+                sh 'mvn clean compile'
             }
         }
         stage('Test') {
             steps {
-                sh 'cat /etc/os-release'
+                sh 'mvn test'
+            }
+        }
+        stage('Package') {
+            steps {
+                sh 'mvn package'
             }
         }        
     }
