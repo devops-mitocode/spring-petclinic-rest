@@ -1,7 +1,12 @@
 pipeline {
-    agent any
-    tools {
-        maven 'maven3.9.11'
+    // agent any
+    // tools {
+    //     maven 'maven3.9.11'
+    // }
+    any {
+        docker {
+            image 'maven:3.9.12-eclipse-temurin-17'
+        }
     }
     stages {
         /*stage('Checkout SCM') {
