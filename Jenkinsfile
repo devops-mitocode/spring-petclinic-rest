@@ -10,6 +10,7 @@ pipeline {
     }
     triggers {
         pollSCM("* * * * *")
+        githubPush()
     }
     stages {
         /*stage('Checkout SCM') {
