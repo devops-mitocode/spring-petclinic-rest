@@ -4,11 +4,11 @@ pipeline {
         maven 'maven3.9.11'
     }
     stages {
-        stage('Checkout SCM') {
+        /*stage('Checkout SCM') {
             steps {
                 git branch: 'master', url: 'https://github.com/devops-mitocode/spring-petclinic-rest.git'
             }
-        }       
+        }*/   
         stage('Build') {
             steps {
                 sh 'ls -la'
