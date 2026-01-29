@@ -30,6 +30,11 @@ pipeline {
             steps {
                 sh 'mvn test -B -ntp'
             }
+            post {
+                success {
+                    junit 'target/surefire-reports/*.xml'
+                }
+            }
         }
         stage('Package') {
             steps {
@@ -41,7 +46,7 @@ pipeline {
         success {
             archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
         }
-        cleanup{
+        cleanup {
             cleanWs()
         }
     }
