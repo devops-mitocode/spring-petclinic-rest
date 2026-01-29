@@ -52,23 +52,13 @@ pipeline {
                 sh 'mvn package -B -ntp -DskipTests'
             }
         }
-        stage('SonarQube analysis') {
+        stage('Sonarqube') {
             steps {
-                script {
-                    def scannerHome = tool 'sonarscanner'
-                    withSonarQubeEnv('sonarqube') {
-                        sh "${scannerHome}/bin/sonar-scanner -Dproject.settings=sonar-project.properties"
-                    }
+                withSonarQubeEnv('sonarqube') {
+                    sh 'mvn sonar:sonar -B -ntp'
                 }
             }
         }
-        // stage('Sonarqube') {
-        //     steps {
-        //         withSonarQubeEnv('sonarqube') {
-        //             sh 'mvn sonar:sonar -B -ntp'
-        //         }
-        //     }
-        // }        
     }
     post {
         success {
