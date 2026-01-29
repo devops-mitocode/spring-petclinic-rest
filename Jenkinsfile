@@ -12,7 +12,7 @@ pipeline {
         timeout(time: 5, unit: 'MINUTES')
     }
     triggers {
-        pollSCM("* * * * *")
+        // pollSCM("* * * * *")
         githubPush()
     }
     stages {
