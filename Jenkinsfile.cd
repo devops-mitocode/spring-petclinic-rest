@@ -14,6 +14,9 @@ pipeline {
             steps {
                 script {
 
+                    sh 'env | sort'
+                    env.MAVEN_HOME = '/usr/share/maven'
+
                     // Forma 1
 
                     def releases = 'spring-petclinic-rest-release'
@@ -29,7 +32,7 @@ pipeline {
                     server.publishBuildInfo buildInfo
                 }
             }
-        }        
+        }
     }
     post {
         success {
