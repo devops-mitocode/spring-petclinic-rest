@@ -10,7 +10,7 @@ pipeline {
                 // sh 'mvn clean package -B -ntp -DskipTests'
 
                 withCredentials([file(credentialsId: 'settings-artifactory', variable: 'M2_SETTINGS')]) {
-                    sh "mvn clean package -B -ntp -s ${M2_SETTINGS}"
+                    sh "mvn clean package -B -s ${M2_SETTINGS}"
                 }
             }
         }
