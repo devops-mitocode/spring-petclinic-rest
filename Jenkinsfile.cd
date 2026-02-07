@@ -16,7 +16,7 @@ pipeline {
         stage('Package') {
             steps {
                 withCredentials([file(credentialsId: 'artifactory-settings', variable: 'M2_SETTINGS')]) {
-                    sh "mvn clean package -U -B -s ${M2_SETTINGS}"
+                    sh 'mvn clean package -U -B -s ${M2_SETTINGS}'
                 }
             }
         }
