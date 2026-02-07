@@ -180,11 +180,11 @@
             <artifactId>jaxb-api</artifactId>
             <version>${jaxb-api.version}</version>
         </dependency>
-        <!-- <dependency>
+        <dependency>
             <groupId>com.mycompany</groupId>
             <artifactId>ldap-authentication</artifactId>
             <version>1.0.0</version>
-        </dependency> -->
+        </dependency>
     </dependencies>
 
     <reporting>

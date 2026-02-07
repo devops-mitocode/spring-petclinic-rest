@@ -5,9 +5,16 @@ pipeline {
         }
     }
     stages {  
+        // stage('Package') {
+        //     steps {
+        //         sh 'mvn clean package -U -B -ntp -DskipTests'
+        //     }
+        // }
         stage('Package') {
             steps {
-                sh 'mvn clean package -B -ntp -DskipTests'
+                withCredentials([file(credentialsId: 'artifactory-settings', variable: 'M2_SETTINGS')]) {
+                    sh "mvn clean package -U -B -s ${M2_SETTINGS}"
+                }
             }
         }
         stage('Artifactory') {
