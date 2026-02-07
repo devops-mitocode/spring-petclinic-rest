@@ -25,6 +25,11 @@ pipeline {
 
                     def rtMaven = Artifactory.newMavenBuild()
                     rtMaven.deployer server: server, releaseRepo: releases, snapshotRepo: snapshots
+
+                    rtMaven.deployer
+                        .addProperty('build.url', "${RUN_DISPLAY_URL}")
+                        .addProperty('build.user', "${USER}")
+
                     def buildInfo = rtMaven.run pom: 'pom.xml', goals: 'clean install -B -ntp -DskipTests'
                     // buildInfo.retention maxBuilds: 10, maxDays: 30, doNotDiscardBuildArtifacts: false
                     buildInfo.env.collect()
