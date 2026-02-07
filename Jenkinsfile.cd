@@ -27,8 +27,8 @@ pipeline {
                     rtMaven.deployer server: server, releaseRepo: releases, snapshotRepo: snapshots
 
                     rtMaven.deployer
-                    .addProperty('build.url', [env.RUN_DISPLAY_URL?.toString()] as String[])
-                    .addProperty('build.user', [env.USER?.toString()] as String[])
+                        .addProperty('build.url', env.RUN_DISPLAY_URL)
+                        .addProperty('build.user', env.USER)
 
                     def buildInfo = rtMaven.run pom: 'pom.xml', goals: 'clean install -B -ntp -DskipTests'
                     server.publishBuildInfo buildInfo
