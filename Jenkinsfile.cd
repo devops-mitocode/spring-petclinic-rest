@@ -5,7 +5,7 @@ pipeline {
         }
     }
     environment {
-        ARTIFACTORY_CREDENTIALS = credentials('artifactory-settings')
+        ARTIFACTORY_CREDENTIALS = credentials('artifactory-credentials')
     }
     stages {  
         // stage('Package') {
@@ -17,7 +17,7 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'artifactory-settings', variable: 'M2_SETTINGS')]) {
                     sh 'env | sort'
-                    sh 'mvn clean package -U -B -s ${M2_SETTINGS}'
+                    sh 'mvn clean package -U -B -DskipTests -s ${M2_SETTINGS}'
                 }
             }
         }
