@@ -8,19 +8,19 @@ pipeline {
     //     ARTIFACTORY_CREDENTIALS = credentials('artifactory-credentials')
     // }
     stages {  
-        // stage('Package') {
-        //     steps {
-        //         sh 'mvn clean package -U -B -ntp -DskipTests'
-        //     }
-        // }
         stage('Package') {
             steps {
-                withCredentials([file(credentialsId: 'artifactory-settings', variable: 'M2_SETTINGS')]) {
-                    sh 'env | sort'
-                    sh 'mvn clean package -U -B -DskipTests -s ${M2_SETTINGS}'
-                }
+                sh 'mvn clean package -U -B -ntp -DskipTests'
             }
         }
+        // stage('Package') {
+        //     steps {
+        //         withCredentials([file(credentialsId: 'artifactory-settings', variable: 'M2_SETTINGS')]) {
+        //             sh 'env | sort'
+        //             sh 'mvn clean package -U -B -DskipTests -s ${M2_SETTINGS}'
+        //         }
+        //     }
+        // }
         stage('Artifactory') {
             steps {
                 script {
