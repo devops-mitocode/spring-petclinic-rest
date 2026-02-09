@@ -21,55 +21,11 @@ pipeline {
                 }
             }
         }
-        stage('Artifactory') {
+        stage('Nexus') {
             steps {
                 script {
 
                     sh 'env | sort'
-                    env.MAVEN_HOME = '/usr/share/maven'
-
-                    // Forma 1 - Usando RtMaven
-
-                    // def releases = 'spring-petclinic-rest-release'
-                    // def snapshots = 'spring-petclinic-rest-snapshot'
-                    // def server = Artifactory.server 'artifactory'
-
-                    // def rtMaven = Artifactory.newMavenBuild()
-                    // rtMaven.deployer server: server, releaseRepo: releases, snapshotRepo: snapshots
-
-                    // rtMaven.deployer
-                    //     .addProperty('build.url', env.RUN_DISPLAY_URL)
-                    //     .addProperty('build.user', env.USER)
-
-                    // def buildInfo = rtMaven.run pom: 'pom.xml', goals: 'clean install -B -ntp -DskipTests'
-                    // server.publishBuildInfo buildInfo
-
-
-                    // Forma 2 - Usando File Spec
-
-                    def releases = 'spring-petclinic-rest-release'
-                    def snapshots = 'spring-petclinic-rest-snapshot'
-                    def server = Artifactory.server 'artifactory'
-                    
-                    def pom = readMavenPom file: 'pom.xml'
-                    println pom.groupId
-
-                    def groupIdPath = pom.groupId.replaceAll("\\.", "/")
-                    println groupIdPath
-
-                    def uploadSpec = """
-                        {
-                            "files": [
-                                {
-                                    "pattern": "target/.*.jar",
-                                    "target": "${releases}/${groupIdPath}/${pom.artifactId}/${pom.version}/",
-                                    "regexp": "true",
-                                    "props": "build.url=${RUN_DISPLAY_URL};build.user=${USER}"
-                                }
-                            ]
-                        }
-                    """
-                    server.upload spec: uploadSpec
 
                 }
             }
