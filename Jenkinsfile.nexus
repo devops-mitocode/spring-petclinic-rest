@@ -22,6 +22,11 @@ pipeline {
                     def pom = readMavenPom file: 'pom.xml'
                     println pom
 
+                    writeFile file: "target/build-info.properties", text: """
+                        url=${env.RUN_DISPLAY_URL}
+                        user=${env.USER}
+                        """.trim()
+
                     nexusPublisher nexusInstanceId: 'nexus',
                     nexusRepositoryId: 'spring-petclinic-rest-release',
                     packages: [[$class: 'MavenPackage',
@@ -29,7 +34,13 @@ pipeline {
                             classifier: '', 
                             extension: '', 
                             filePath: "target/${pom.artifactId}-${pom.version}.${pom.packaging}"
-                        ]],
+                            ],
+                            [
+                                classifier: 'build-info',
+                                extension: 'properties',
+                                filePath: "target/build-info.properties"
+                            ]
+                        ],
                         mavenCoordinate: [
                             groupId: "${pom.groupId}",
                             artifactId: "${pom.artifactId}",
