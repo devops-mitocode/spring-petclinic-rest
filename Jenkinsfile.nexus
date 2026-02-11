@@ -34,7 +34,12 @@ pipeline {
                             artifactId: "${pom.artifactId}",
                             packaging: "${pom.packaging}",
                             version: "${pom.version}"
-                    ]]]
+                        ],
+                        attributes: [
+                            build.url: env.RUN_DISPLAY_URL,
+                            build.user: env.USER
+                        ]
+                    ]]
 
 
                 }
