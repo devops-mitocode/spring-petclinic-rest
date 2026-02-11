@@ -32,8 +32,8 @@ pipeline {
                         mavenCoordinate: [
                             groupId: "${pom.groupId}",
                             artifactId: "${pom.artifactId}",
-                            packaging: 'jar',
-                            version: "${pom.version}-${BUILD_NUMBER}"
+                            packaging: "${pom.packaging}",
+                            version: "${pom.version}"
                     ]]]
 
 
