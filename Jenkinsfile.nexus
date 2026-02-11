@@ -10,7 +10,7 @@ pipeline {
     stages {  
         stage('Package') {
             steps {
-                sh 'mvn clean package -U -B -ntp -DskipTests'
+                sh 'mvn clean package -U -B -DskipTests'
             }
         }
         stage('Nexus') {
@@ -34,10 +34,6 @@ pipeline {
                             artifactId: "${pom.artifactId}",
                             packaging: "${pom.packaging}",
                             version: "${pom.version}"
-                        ],
-                        attributes: [
-                            url: env.RUN_DISPLAY_URL,
-                            user: env.USER
                         ]
                     ]]
 
