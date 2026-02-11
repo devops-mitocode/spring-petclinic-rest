@@ -28,7 +28,7 @@ pipeline {
                         mavenAssetList: [[
                             classifier: '', 
                             extension: '', 
-                            filePath: "target/${pom.artifactId}-${pom.version}.jar"]],
+                            filePath: "target/${pom.artifactId}-${pom.version}.${pom.packaging}"]],
                         mavenCoordinate: [
                             groupId: "${pom.groupId}",
                             artifactId: "${pom.artifactId}",
