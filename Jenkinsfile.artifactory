@@ -4,6 +4,9 @@ pipeline {
             image 'maven:3.9.11-eclipse-temurin-17'
         }
     }
+    environment {
+        ARTIFACTORY_CREDENTIALS = credentials('artifactory-credentials')
+    }
     stages {  
         // stage('Package') {
         //     steps {
