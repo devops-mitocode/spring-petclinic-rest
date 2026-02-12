@@ -14,7 +14,7 @@ pipeline {
             steps {
                 script {
 
-                    sh 'env | sort'
+                    sh 'docker --version'
 
                 }
             }
