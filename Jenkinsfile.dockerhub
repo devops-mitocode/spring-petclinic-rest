@@ -13,10 +13,14 @@ pipeline {
         }
         stage('DockerHub') {
             agent any
+            options { skipDefaultCheckout() }
             steps {
-                script {
 
-                    sh 'docker --version'
+                sh 'docker --version'
+
+                script {
+                    
+                    def pom = readMavenPom file: 'pom.xml'
 
                 }
             }
