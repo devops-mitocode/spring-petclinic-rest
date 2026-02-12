@@ -47,8 +47,8 @@ pipeline {
 
                     // Forma 2 - Usando File Spec
 
-                    def releases = 'spring-petclinic-rest-release'
-                    def snapshots = 'spring-petclinic-rest-snapshot'
+                    def releaseRepo = 'spring-petclinic-rest-release'
+                    def snapshotRepo = 'spring-petclinic-rest-snapshot'
                     def server = Artifactory.server 'artifactory'
                     
                     def pom = readMavenPom file: 'pom.xml'
@@ -62,7 +62,7 @@ pipeline {
                             "files": [
                                 {
                                     "pattern": "target/.*.jar",
-                                    "target": "${releases}/${groupIdPath}/${pom.artifactId}/${pom.version}/",
+                                    "target": "${releaseRepo}/${groupIdPath}/${pom.artifactId}/${pom.version}/",
                                     "regexp": "true",
                                     "props": "build.url=${RUN_DISPLAY_URL};build.user=${USER}"
                                 }
