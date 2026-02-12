@@ -1,0 +1,115 @@
+properties([
+    parameters([
+        [$class: 'CascadeChoiceParameter',
+         choiceType: 'PT_SINGLE_SELECT',
+         description: 'Select the version of your application',
+         filterLength: 1,
+         filterable: false,
+         name: 'version',
+         script: [
+            $class: 'GroovyScript',
+            script: [
+                classpath: [],
+                sandbox: false,
+                script:
+                        ''' 
+                    import jenkins.model.*
+                    import groovy.json.JsonSlurper
+
+                    import com.cloudbees.plugins.credentials.CredentialsProvider
+                    import com.cloudbees.plugins.credentials.CredentialsMatchers
+                    import com.cloudbees.plugins.credentials.domains.DomainRequirement
+                    // import com.cloudbees.plugins.credentials.common.StringCredentials
+                    import com.cloudbees.plugins.credentials.common.PasswordCredentials
+                    import org.jenkinsci.plugins.plaincredentials.StringCredentials
+
+
+                    def creds = CredentialsProvider.lookupCredentials(
+                        StringCredentials.class,
+                        Jenkins.get(),
+                        null,
+                        (List<DomainRequirement>) []
+                    )
+                    def tokenCred = CredentialsMatchers.firstOrNull(creds, CredentialsMatchers.withId('artifactory-token'))
+                    if (!tokenCred) {
+                    return ['No versions (missing credentials)']
+                    }
+                    def token = tokenCred.secret.plainText                    
+
+                    def url = 'http://34.219.60.221:8081/artifactory/api/storage/spring-petclinic-rest-snapshot/org/springframework/samples/spring-petclinic-rest'
+                    def http_client = new URL(url).openConnection() as HttpURLConnection
+                    http_client.setRequestProperty("Authorization", "Bearer ${token}");
+                    http_client.setRequestMethod('GET')
+                    http_client.connect()
+                    def response = [:]
+                    if (http_client.responseCode == 200) {
+                    response = new JsonSlurper().parseText(http_client.inputStream.getText('UTF-8'))
+                    } else {
+                    return ['No results']
+                    }
+                    def version_list = response.children.collect { it.uri.replaceAll('/', '') }
+                    if (version_list) {
+                        return version_list.sort()
+                    }
+                '''
+            ],
+            fallbackScript: [classpath: [], sandbox: true, script: ''' return ["No versions available"] ''']
+         ]
+        ]
+    ])
+])
+
+pipeline {
+    agent {
+        docker {
+            image 'maven:3.9.6-eclipse-temurin-17-alpine'
+        }
+    }
+    environment {
+        ARTIFACTORY_URL = 'http://34.219.60.221:8081/artifactory'
+        REPO = 'spring-petclinic-rest-snapshot'
+        RELEASE_REPO = 'spring-petclinic-rest-release'
+        ARTIFACTORY_TOKEN = credentials('artifactory-token')        
+    }
+    options {
+        skipDefaultCheckout()
+    }
+    stages {
+        stage('Descarga artefacto') {
+            steps {
+                sh '''
+                    env | sort
+                    cat /etc/os-release
+                    curl --version
+
+                    echo ARTIFACTORY_URL: $ARTIFACTORY_URL
+                    echo version: ${version}
+                    echo version: $version
+
+                    curl -v --location "$ARTIFACTORY_URL/$REPO/org/springframework/samples/spring-petclinic-rest/${version}/spring-petclinic-rest-${version}.jar" \
+                        --header "Authorization: Bearer $ARTIFACTORY_TOKEN" \
+                        --output "spring-petclinic-rest-${version}.jar"
+
+                    ls -lha
+                '''
+            }
+        }
+        stage('Renombra el artefacto') {
+            steps {
+                sh 'env | sort'
+                sh "mv spring-petclinic-rest-${params.version}.jar app-${BUILD_NUMBER}.jar"
+                sh 'ls -lha'
+            }
+        }
+        stage('Publica el artefacto en release') {
+            steps {
+                sh '''
+                    curl -v -X PUT \
+                        --header "Authorization: Bearer $ARTIFACTORY_TOKEN" \
+                        "$ARTIFACTORY_URL/$RELEASE_REPO/app-$BUILD_NUMBER.jar" \
+                        -T app-$BUILD_NUMBER.jar
+                '''
+            }
+        }
+    }
+}
