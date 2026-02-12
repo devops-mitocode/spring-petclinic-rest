@@ -5,11 +5,19 @@ pipeline {
         }
     }
     stages {  
+        // stage('Package') {
+        //     steps {
+        //         sh 'mvn clean package -U -B -DskipTests'
+        //     }
+        // }
         stage('Package') {
             steps {
-                sh 'mvn clean package -U -B -DskipTests'
+                withCredentials([file(credentialsId: 'nexus-settings', variable: 'M2_SETTINGS')]) {
+                    sh 'env | sort'
+                    sh 'mvn clean package -U -B -DskipTests -s ${M2_SETTINGS}'
+                }
             }
-        }
+        }        
         stage('Nexus') {
             steps {
                 script {
@@ -17,7 +25,7 @@ pipeline {
                     sh 'env | sort'
 
                     def pom = readMavenPom file: 'pom.xml'
-                    println pom                    
+                    println pom
 
                     nexusPublisher nexusInstanceId: 'nexus',
                     nexusRepositoryId: 'spring-petclinic-rest-release',
