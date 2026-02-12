@@ -1,0 +1,31 @@
+pipeline {
+    agent {
+        docker {
+            image 'maven:3.9.11-eclipse-temurin-17'
+        }
+    }
+    stages {  
+        stage('Package') {
+            steps {
+                sh 'mvn clean package -U -B -DskipTests'
+            }
+        }
+        stage('Nexus') {
+            steps {
+                script {
+
+                    sh 'env | sort'
+
+                }
+            }
+        }
+    }
+    post {
+        success {
+            archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+        }
+        cleanup {
+            cleanWs()
+        }
+    }
+}
