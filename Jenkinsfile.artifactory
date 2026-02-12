@@ -7,7 +7,7 @@ pipeline {
     stages {  
         stage('Package') {
             steps {
-                sh 'mvn clean package -U -B -ntp -DskipTests'
+                sh 'mvn clean package -U -B -DskipTests'
             }
         }
         stage('Artifactory') {
