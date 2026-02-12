@@ -19,8 +19,20 @@ pipeline {
                 sh 'docker --version'
 
                 script {
-                    
+
                     def pom = readMavenPom file: 'pom.xml'
+
+                    // Forma 1: Usando docker build para misma plataforma del host
+
+
+                    // sh 'docker build --help'
+                    // sh 'docker build -t danycenas/spring-petclinic-rest:3.2.1 .'
+
+                    def app = docker.build("danycenas/${pom.artifactId}:${pom.version}")
+                    docker.withRegistry('https://registry.hub.docker.com/', 'dockerhub-credentials') {
+                        app.push()
+                        app.push('latest')
+                    }
 
                 }
             }
