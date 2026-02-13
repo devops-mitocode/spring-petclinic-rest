@@ -34,7 +34,7 @@ properties([
                     if (!tokenCred) {
                     return ['No versions (missing credentials)']
                     }
-                    def token = tokenCred.secret.plainText                    
+                    def token = tokenCred.secret.plainText
 
                     def url = 'http://34.219.60.221:8081/artifactory/api/storage/spring-petclinic-rest-snapshot/org/springframework/samples/spring-petclinic-rest'
                     def http_client = new URL(url).openConnection() as HttpURLConnection
