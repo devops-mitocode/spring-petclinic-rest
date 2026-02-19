@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-petclinic-rest
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: spring-petclinic-rest
+  template:
+    metadata:
+      labels:
+        app: spring-petclinic-rest
+    spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: spring-petclinic-rest
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: "0.5"
+              memory: "1Gi"
+          image: danycenas/spring-petclinic-rest:latest
+          ports:
+            - containerPort: 9966

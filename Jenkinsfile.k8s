@@ -1,18 +1,66 @@
 pipeline {
-    agent {
-        kubernetes {
-            defaultContainer 'maven'
-            yamlFile 'KubernetesPod.yaml'
-        }
+  agent {
+    kubernetes {
+      defaultContainer 'maven'
+      yamlFile 'KubernetesPod.yaml'
     }
-    stages {
-        stage('Build') {
+  }
+
+  stages {
+        stage('Run maven') {
             steps {
-                container('maven'){
+              sh 'mvn clean package -DskipTests -B -ntp'
+            }
+        }
+        stage("Publish Artifacts on Docker") {
+            steps{
+                container('docker'){
                     sh 'cat /etc/os-release'
-                    sh 'mvn clean package -DskipTests -B -ntp'
+                    sh 'docker --version'
+                    sh 'git --version'
+                    sh 'whoami'
+
+
+                    script {
+                        def pom = readMavenPom file: 'pom.xml'
+                        def imageVersion = "danycenas/${pom.artifactId}:${pom.version}"
+                        def imageLatest = "danycenas/${pom.artifactId}:latest"
+                        env.IMAGE_VERSION = "${imageVersion}"
+
+
+                        withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                            sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+                            sh """
+                                docker buildx build -t ${imageVersion} --push .
+                                docker buildx build -t ${imageLatest} --push .
+                            """
+                        }
+                    }
                 }
             }
         }
-    }
+        stage('K8s deploy') {
+            steps {
+                withKubeConfig([credentialsId: 'kubernetes-credentials']) {
+                    sh 'whoami'
+                    sh 'env | sort'
+
+
+                    sh 'curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"'
+                    sh 'install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl'
+                    sh 'chmod u+x ./kubectl'
+
+
+                    sh 'which kubectl'
+                    sh '/usr/local/bin/kubectl version --client --output=yaml'
+                    sh 'kubectl version'
+                   
+                    sh "sed -i 's|image: danycenas/spring-petclinic-rest:latest|image: ${IMAGE_VERSION}|' deployment.yaml"
+                    sh 'cat deployment.yaml'
+                    sh 'kubectl apply -f deployment.yaml'
+                    sh 'kubectl apply -f service.yaml'
+                }
+            }
+        }
+  }
 }
