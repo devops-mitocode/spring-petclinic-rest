@@ -1,0 +1,18 @@
+pipeline {
+    agent {
+        kubernetes {
+            defaultContainer 'maven'
+            yamlFile 'KubernetesPod.yaml'
+        }
+    }
+    stages {
+        stage('Build') {
+            steps {
+                container('maven'){
+                    sh 'cat /etc/os-release'
+                    sh 'mvn clean package -DskipTests -B -ntp'
+                }
+            }
+        }
+    }
+}

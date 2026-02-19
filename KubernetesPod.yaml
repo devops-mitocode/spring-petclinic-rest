@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+    - name: maven
+      image: maven:3.9.9-eclipse-temurin-17-alpine
+      command:
+        - cat
+      tty: true
+    - name: docker
+      image: docker:27.5.1-cli
+      command:
+        - cat
+      tty: true
+      volumeMounts:
+        - name: docker-socket
+          mountPath: /var/run/docker.sock
+
+  volumes:
+  - name: docker-socket
+    hostPath:
+      path: /var/run/docker.sock
