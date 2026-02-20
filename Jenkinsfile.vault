@@ -15,13 +15,10 @@ pipeline {
             ]]
           ) {
             sh '''
-              set -e
+              env | sort
 
-
-              test -n "$DOCKER_USER"
-              test -n "$DOCKER_TOKEN"
-              echo "DOCKER_USER cargado: $DOCKER_USER"
-              echo "DOCKER_TOKEN cargado (len): ${#DOCKER_TOKEN}"
+              echo "DOCKER_USER: $DOCKER_USER"
+              echo "DOCKER_TOKEN (len): ${#DOCKER_TOKEN}"
             '''
 
 
