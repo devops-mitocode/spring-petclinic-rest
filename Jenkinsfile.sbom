@@ -1,10 +1,10 @@
 pipeline {
     agent none
 
-    environment {
-        // DTRACK_BASE_URL = 'http://34.214.118.75:9091'
-        DTRACK_API_KEY  = credentials('dependencytrack-credentials')
-    }
+    // environment {
+    //     DTRACK_BASE_URL = 'http://34.214.118.75:9091'
+    //     DTRACK_API_KEY  = credentials('dependencytrack-credentials')
+    // }
 
     stages {
         stage('Generate SBOM') {
