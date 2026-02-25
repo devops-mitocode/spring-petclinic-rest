@@ -24,7 +24,7 @@ pipeline {
 
                 dependencyTrackPublisher(
                     artifact: 'target/bom.json',
-                    projectName: "${env.ARTIFACT_ID}-app",
+                    projectName: env.ARTIFACT_ID,
                     projectVersion: env.VERSION,
                     dependencyTrackUrl: env.DTRACK_BASE_URL,
                     dependencyTrackApiKey: env.DTRACK_API_KEY,
