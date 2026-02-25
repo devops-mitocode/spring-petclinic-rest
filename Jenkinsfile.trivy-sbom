@@ -38,7 +38,7 @@ pipeline {
                 sh 'docker build --pull -t "$IMAGE" .'
             }
         }
-        stage('Scan Image') {
+        stage('Scan Image (Generate SBOM)') {
             agent {
                 docker {
                     image 'aquasec/trivy:0.68.2'
@@ -46,7 +46,7 @@ pipeline {
                     args "--entrypoint='' -u root:root -v /var/run/docker.sock:/var/run/docker.sock"
                 }
             }
-            options {
+            options { 
                 skipDefaultCheckout()
             }
             environment {
@@ -54,20 +54,29 @@ pipeline {
             }
             steps {
                 sh '''
+                    # Genera SBOM CycloneDX desde la imagen Docker usando `trivy image`.
+                    # Nota: este modo es vulnerability-scan first; el SBOM es un formato de salida.
                     trivy image "$IMAGE" \
-                        --severity HIGH,CRITICAL \
-                        --ignore-unfixed \
-                        --exit-code 0 \
-                        --no-progress \
-                        --format table -o trivy-image.txt
+                        --format cyclonedx \
+                        --output trivy-image-bom.json \
+                        --no-progress
 
-                    cat trivy-image.txt
+                    ls -lh trivy-image-bom.json
                 '''
+
+                dependencyTrackPublisher(
+                    artifact: 'trivy-image-bom.json',
+                    projectName: "${env.ARTIFACT_ID}-container",
+                    projectVersion: env.VERSION,
+                    dependencyTrackUrl: env.DTRACK_BASE_URL,
+                    dependencyTrackApiKey: env.DTRACK_API_KEY,
+                    autoCreateProjects: true,
+                    synchronous: true
+                )
             }
             post {
-                always { 
-                    archiveArtifacts artifacts: 'trivy-image.txt', fingerprint: true
-                    cleanWs()
+                always {
+                    archiveArtifacts artifacts: 'trivy-image-bom.json', fingerprint: true
                 }
             }
         }
