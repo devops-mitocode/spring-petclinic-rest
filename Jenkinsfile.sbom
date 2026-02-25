@@ -18,28 +18,9 @@ pipeline {
 
                 script {
                     def pom = readMavenPom file: 'pom.xml'
-
-                    env.GROUP_ID    = pom.groupId
                     env.ARTIFACT_ID = pom.artifactId
                     env.VERSION     = pom.version
-                    env.IMAGE     = "${env.ARTIFACT_ID}:${env.VERSION}"
-
-                    echo """
-                        Metadata:
-                        groupId    = ${env.GROUP_ID}
-                        artifactId = ${env.ARTIFACT_ID}
-                        version    = ${env.VERSION}
-                        image      = ${env.IMAGE}
-                    """
-                }
-
-                // dependencyTrackPublisher(
-                //     artifact: 'target/bom.json',
-                //     projectName: "${env.ARTIFACT_ID}-app",
-                //     projectVersion: env.VERSION,
-                //     autoCreateProjects: true,
-                //     synchronous: true
-                // )                
+                }             
 
                 dependencyTrackPublisher(
                     artifact: 'target/bom.json',
