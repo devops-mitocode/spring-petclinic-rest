@@ -1,0 +1,78 @@
+pipeline {
+    agent none
+    // triggers{
+    //     cron('H/2 * * * *')
+    // }
+    environment {
+        DTRACK_BASE_URL = 'http://34.222.152.97:9091'
+        DTRACK_API_KEY  = credentials('dependencytrack-credentials')
+    }
+    stages {
+        stage('Build Artifact') {
+            agent {
+                docker {
+                    image 'maven:3.9.9-eclipse-temurin-17-alpine'
+                }
+            }
+            steps {
+                sh 'mvn -U -B -ntp -DskipTests clean package'
+            }
+        }
+        stage('Build Image') {
+            agent {
+                docker {
+                    image 'docker:29.1.3-cli-alpine3.23'
+                    reuseNode true
+                    args '-u root:root -v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
+            options {
+                skipDefaultCheckout()
+            }
+            steps {
+
+                script {
+                    def pom = readMavenPom file: 'pom.xml'
+                    env.ARTIFACT_ID = pom.artifactId
+                    env.VERSION     = pom.version
+                    env.IMAGE     = "${env.ARTIFACT_ID}:${env.VERSION}"
+                }
+
+                sh 'docker build --pull -t "$IMAGE" .'
+            }
+        }
+        stage('Scan Image') {
+            agent {
+                docker {
+                    image 'aquasec/trivy:0.68.2'
+                    reuseNode true
+                    args "--entrypoint='' -u root:root -v /var/run/docker.sock:/var/run/docker.sock"
+                }
+            }
+            options {
+                skipDefaultCheckout()
+            }
+            environment {
+                TRIVY_DISABLE_VEX_NOTICE = 'true'
+            }
+            steps {
+                sh '''
+                    trivy image "$IMAGE" \
+                        --severity HIGH,CRITICAL \
+                        --ignore-unfixed \
+                        --exit-code 0 \
+                        --no-progress \
+                        --format table -o trivy-image.txt
+
+                    cat trivy-image.txt
+                '''
+            }
+            post {
+                always { 
+                    archiveArtifacts artifacts: 'trivy-image.txt', fingerprint: true
+                    cleanWs()
+                }
+            }
+        }    
+    }
+}
