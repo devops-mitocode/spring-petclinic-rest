@@ -4,12 +4,13 @@ pipeline {
             image 'maven:3.9.9-eclipse-temurin-17-alpine'
         }
     }
-
-    // environment {
-    //     DTRACK_BASE_URL = 'http://34.214.118.75:9091'
-    //     DTRACK_API_KEY  = credentials('dependencytrack-credentials')
-    // }
-
+    triggers{
+        cron('H/2 * * * *')
+    }
+    environment {
+        DTRACK_BASE_URL = 'http://34.222.152.97:9091'
+        DTRACK_API_KEY  = credentials('dependencytrack-credentials')
+    }
     stages {
         stage('Generate SBOM') {
             steps {
@@ -32,23 +33,23 @@ pipeline {
                     """
                 }
 
-                dependencyTrackPublisher(
-                    artifact: 'target/bom.json',
-                    projectName: "${env.ARTIFACT_ID}-app",
-                    projectVersion: env.VERSION,
-                    autoCreateProjects: true,
-                    synchronous: true
-                )                
-
                 // dependencyTrackPublisher(
                 //     artifact: 'target/bom.json',
                 //     projectName: "${env.ARTIFACT_ID}-app",
                 //     projectVersion: env.VERSION,
-                //     dependencyTrackUrl: env.DTRACK_BASE_URL,
-                //     dependencyTrackApiKey: env.DTRACK_API_KEY,
                 //     autoCreateProjects: true,
                 //     synchronous: true
-                // )
+                // )                
+
+                dependencyTrackPublisher(
+                    artifact: 'target/bom.json',
+                    projectName: "${env.ARTIFACT_ID}-app",
+                    projectVersion: env.VERSION,
+                    dependencyTrackUrl: env.DTRACK_BASE_URL,
+                    dependencyTrackApiKey: env.DTRACK_API_KEY,
+                    autoCreateProjects: true,
+                    synchronous: true
+                )
             }
             post {
                 success { 
