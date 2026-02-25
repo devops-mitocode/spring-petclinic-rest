@@ -13,7 +13,7 @@ pipeline {
     stages {
         stage('Generate SBOM') {
             steps {
-                sh 'mvn -U -B -ntp org.cyclonedx:cyclonedx-maven-plugin:2.8.0:makeAggregateBom'
+                sh 'mvn -U -B -ntp cyclonedx:makeAggregateBom'
 
                 script {
                     def pom = readMavenPom file: 'pom.xml'
