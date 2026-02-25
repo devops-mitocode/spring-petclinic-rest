@@ -4,9 +4,9 @@ pipeline {
             image 'maven:3.9.9-eclipse-temurin-17-alpine'
         }
     }
-    triggers{
-        cron('H/2 * * * *')
-    }
+    // triggers{
+    //     cron('H/2 * * * *')
+    // }
     environment {
         DTRACK_BASE_URL = 'http://34.222.152.97:9091'
         DTRACK_API_KEY  = credentials('dependencytrack-credentials')
