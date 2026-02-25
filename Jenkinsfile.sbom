@@ -32,6 +32,14 @@ pipeline {
                     """
                 }
 
+                dependencyTrackPublisher(
+                    artifact: 'target/bom.json',
+                    projectName: "${env.ARTIFACT_ID}-app",
+                    projectVersion: env.VERSION,
+                    autoCreateProjects: true,
+                    synchronous: true
+                )                
+
                 // dependencyTrackPublisher(
                 //     artifact: 'target/bom.json',
                 //     projectName: "${env.ARTIFACT_ID}-app",
