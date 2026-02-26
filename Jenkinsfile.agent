@@ -18,12 +18,13 @@ pipeline {
       steps {
         script {
           // Ejecutamos mal a propósito pero no detenemos el pipeline
-          catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-            sh """
-              echo "Running Maven with typo..."
-              mvn -U -B -ntp clean packag 2>&1 | tee ${LOG_FILE}
-            """
-          }
+          // catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+          //   sh """
+          //     echo "Running Maven with typo..."
+          //     mvn -U -B -ntp clean packag 2>&1 | tee ${LOG_FILE}
+          //   """
+          // }
+          sh "mvn -U -B -ntp clean package"
         }
       }
     }
