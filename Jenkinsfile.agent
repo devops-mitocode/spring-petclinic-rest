@@ -11,7 +11,7 @@ pipeline {
         }
       }
       steps {
-          sh "mvn -U -B -ntp clean package"
+          sh "mvn -U -B -ntp clean packag"
       }
     }
 
@@ -25,6 +25,10 @@ pipeline {
       steps {
         sh """
           gh --version
+
+          gh auth status
+
+          gh copilot explain 
         """
       }
     }
