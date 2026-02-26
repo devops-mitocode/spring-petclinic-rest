@@ -8,7 +8,7 @@ pipeline {
     //     cron('H/2 * * * *')
     // }
     environment {
-        DTRACK_BASE_URL = 'http://34.222.152.97:9091'
+        DTRACK_BASE_URL = 'http://34.216.52.146:9091'
         DTRACK_API_KEY  = credentials('dependencytrack-credentials')
     }
     stages {
