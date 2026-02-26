@@ -1,11 +1,6 @@
 pipeline {
   agent none
   options { timestamps() }
-
-  environment {
-    LOG_FILE = "build.log"
-  }
-
   stages {
 
     stage('Build (Maven)') {
@@ -16,23 +11,14 @@ pipeline {
         }
       }
       steps {
-        script {
-          // Ejecutamos mal a propósito pero no detenemos el pipeline
-          // catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-          //   sh """
-          //     echo "Running Maven with typo..."
-          //     mvn -U -B -ntp clean packag 2>&1 | tee ${LOG_FILE}
-          //   """
-          // }
           sh "mvn -U -B -ntp clean package"
-        }
       }
     }
 
     stage('AI Agent Analysis') {
       agent {
         docker {
-          image 'ghcr.io/supportpal/github-gh-cli:latest'
+          image 'ghcr.io/supportpal/github-gh-cli:2.87.3'
           reuseNode true
         }
       }
