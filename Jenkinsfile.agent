@@ -37,12 +37,7 @@ pipeline {
       }
       steps {
         sh """
-          echo "Analyzing failure with AI..."
-          tail -n 50 ${LOG_FILE}
-
-          gh copilot explain "Pipeline failed. Here is the log:
-          $(tail -n 100 ${LOG_FILE})
-          Explain root cause and minimal fix."
+          gh copilot
         """
       }
     }
