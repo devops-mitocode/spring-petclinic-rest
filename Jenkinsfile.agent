@@ -1,0 +1,50 @@
+pipeline {
+  agent none
+  options { timestamps() }
+
+  environment {
+    LOG_FILE = "build.log"
+  }
+
+  stages {
+
+    stage('Build (Maven)') {
+      agent {
+        docker {
+          image 'maven:3.9.9-eclipse-temurin-17-alpine'
+          reuseNode true
+        }
+      }
+      steps {
+        script {
+          // Ejecutamos mal a propósito pero no detenemos el pipeline
+          catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+            sh """
+              echo "Running Maven with typo..."
+              mvn -U -B -ntp clean packag 2>&1 | tee ${LOG_FILE}
+            """
+          }
+        }
+      }
+    }
+
+    stage('AI Agent Analysis') {
+      agent {
+        docker {
+          image 'ghcr.io/github/gh-cli:latest'
+          reuseNode true
+        }
+      }
+      steps {
+        sh """
+          echo "Analyzing failure with AI..."
+          tail -n 50 ${LOG_FILE}
+
+          gh copilot explain "Pipeline failed. Here is the log:
+          $(tail -n 100 ${LOG_FILE})
+          Explain root cause and minimal fix."
+        """
+      }
+    }
+  }
+}
