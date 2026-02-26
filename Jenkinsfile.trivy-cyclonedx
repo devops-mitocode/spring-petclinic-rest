@@ -1,8 +1,8 @@
 pipeline {
     agent none
     environment {
-        DTRACK_BASE_URL = 'http://34.222.152.97:9091'
-        DTRACK_API_KEY  = credentials('dependencytrack-credentials')
+        DTRACK_BASE_URL = 'http://34.216.52.146:9091'
+        DTRACK_API_KEY  = credentials('dependencytrack-token')
     }
     stages {
         stage('Build Artifact') {
@@ -19,7 +19,6 @@ pipeline {
             agent {
                 docker {
                     image 'docker:29.1.3-cli-alpine3.23'
-                    reuseNode true
                     args '-u root:root -v /var/run/docker.sock:/var/run/docker.sock'
                 }
             }
@@ -42,7 +41,6 @@ pipeline {
             agent {
                 docker {
                     image 'aquasec/trivy:0.68.2'
-                    reuseNode true
                     args "--entrypoint='' -u root:root -v /var/run/docker.sock:/var/run/docker.sock"
                 }
             }
