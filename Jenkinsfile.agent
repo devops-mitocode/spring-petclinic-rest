@@ -32,13 +32,13 @@ pipeline {
     stage('AI Agent Analysis') {
       agent {
         docker {
-          image 'ghcr.io/devcontainers/features/copilot-cli:1'
+          image 'ghcr.io/supportpal/github-gh-cli:latest'
           reuseNode true
         }
       }
       steps {
         sh """
-          gh copilot
+          gh --version
         """
       }
     }
