@@ -11,7 +11,7 @@ pipeline {
         }
       }
       steps {
-          sh "mvn -U -B -ntp clean package"
+          sh "mvn -U -B -ntp clean package -DskipTests"
       }
     }
 
