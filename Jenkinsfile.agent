@@ -27,15 +27,12 @@ pipeline {
       }
       steps {
         sh '''
-          set -e
+          env | sort
 
-          echo "Validando autenticación..."
           gh auth status
 
-          echo "Instalando Copilot CLI si no está..."
           gh extension install github/gh-copilot || true
 
-          echo "Probando Copilot..."
           gh copilot --prompt "Explica brevemente este Jenkinsfile"
         '''        
       }
