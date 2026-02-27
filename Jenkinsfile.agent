@@ -1,28 +1,14 @@
 pipeline {
   agent none
   environment {
-    GH_TOKEN = credentials('github-copilot-cli-token')
+    GH_TOKEN = credentials('github-cli-token')
   }
   stages {
-
-    stage('Build (Maven)') {
-      agent {
-        docker {
-          image 'maven:3.9.9-eclipse-temurin-17-alpine'
-          reuseNode true
-        }
-      }
-      steps {
-          sh "mvn -U -B -ntp clean package -DskipTests"
-      }
-    }
-
     stage('AI Agent Analysis') {
       agent {
         docker {
           image 'ghcr.io/supportpal/github-gh-cli:2.87.3'
           args '-e HOME=/tmp'
-          reuseNode true
         }
       }
       steps {
