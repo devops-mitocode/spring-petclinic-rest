@@ -31,7 +31,7 @@ pipeline {
 
           gh auth status
 
-        
+          gh copilot --help
 
           gh copilot --prompt "Explica el Jenkinsfile"
         '''        
