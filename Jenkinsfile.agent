@@ -19,7 +19,7 @@ pipeline {
 
           gh copilot --help
 
-          gh copilot --prompt "Explica el Jenkinsfile"
+          gh copilot --prompt "Explica el Jenkinsfile.vault"
         '''        
       }
     }
