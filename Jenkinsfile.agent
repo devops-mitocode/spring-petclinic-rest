@@ -36,7 +36,7 @@ pipeline {
           gh extension install github/gh-copilot || true
 
           echo "Probando Copilot..."
-          gh copilot --prompt "Explain what an AI agent does in a Jenkins pipeline."
+          gh copilot --prompt "Explica brevemente este Jenkinsfile"
         '''        
       }
     }
