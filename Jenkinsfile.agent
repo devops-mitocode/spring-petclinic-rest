@@ -21,17 +21,11 @@ pipeline {
       agent {
         docker {
           image 'ghcr.io/supportpal/github-gh-cli:2.87.3'
+          args '-e HOME=/tmp -e XDG_CONFIG_HOME=/tmp/.config -e XDG_DATA_HOME=/tmp/.local/share'
           reuseNode true
         }
       }
       steps {
-        // sh """
-        //   gh --version
-
-        //   gh auth status
-
-        //   gh copilot explain 
-        // """
         sh '''
           set -e
 
