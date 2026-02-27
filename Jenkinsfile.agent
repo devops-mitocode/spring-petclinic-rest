@@ -31,9 +31,9 @@ pipeline {
 
           gh auth status
 
-          gh extension install github/gh-copilot
+          gh extension install github/gh-copilot || true
 
-          gh copilot --prompt "Explica este Jenkinsfile"
+          gh copilot --prompt "Explica el Jenkinsfile"
         '''        
       }
     }
