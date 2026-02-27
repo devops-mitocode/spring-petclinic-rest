@@ -1,6 +1,8 @@
 pipeline {
   agent none
-  options { timestamps() }
+  environment {
+    GH_TOKEN = credentials('github-copilot-cli-token')
+  }
   stages {
 
     stage('Build (Maven)') {
@@ -23,13 +25,25 @@ pipeline {
         }
       }
       steps {
-        sh """
-          gh --version
+        // sh """
+        //   gh --version
 
+        //   gh auth status
+
+        //   gh copilot explain 
+        // """
+        sh '''
+          set -e
+
+          echo "Validando autenticación..."
           gh auth status
 
-          gh copilot explain 
-        """
+          echo "Instalando Copilot CLI si no está..."
+          gh extension install github/gh-copilot || true
+
+          echo "Probando Copilot..."
+          gh copilot explain "Explain what an AI agent does in a Jenkins pipeline."
+        '''        
       }
     }
   }
